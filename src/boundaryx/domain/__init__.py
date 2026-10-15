@@ -1,0 +1,1 @@
+"""BoundaryX domain layer."""

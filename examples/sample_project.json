@@ -1,0 +1,417 @@
+{
+  "format": "boundaryx_project_export",
+  "version": "1.0",
+  "exported_at": "2026-10-15T16:30:00Z",
+  "include_secrets": false,
+  "project": {
+    "id": "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+    "name": "CloudFlow SaaS Platform - Authorization & Boundary Audit",
+    "description": "Multi-tenant B2B enterprise SaaS assessment focusing on BOLA/IDOR, cross-tenant isolation boundaries, and Broken Function Level Authorization.",
+    "archived": false,
+    "settings": {
+      "default_execution_mode": "preview",
+      "rate_limit_rps": 5,
+      "max_concurrency": 2,
+      "tls_verify": true,
+      "evidence_retention_days": 90
+    },
+    "created_at": "2026-10-14T09:00:00Z",
+    "updated_at": "2026-10-15T15:45:00Z"
+  },
+  "scope_rules": [
+    {
+      "id": "11111111-2222-3333-4444-555555555551",
+      "hostname": "crm.cloudflow-example.com",
+      "port": 443,
+      "scheme": "https",
+      "path_prefix": "/api/v1",
+      "path_exclusions": [
+        "/api/v1/internal/admin-debug",
+        "/api/v1/system/telemetry"
+      ],
+      "is_excluded": false,
+      "notes": "Primary Production API Gateway for CloudFlow CRM services"
+    },
+    {
+      "id": "11111111-2222-3333-4444-555555555552",
+      "hostname": "internal-vault.cloudflow-example.com",
+      "port": 443,
+      "scheme": "https",
+      "path_prefix": "/",
+      "path_exclusions": [],
+      "is_excluded": true,
+      "notes": "Out of scope infrastructure KMS and secret store"
+    }
+  ],
+  "identities": [
+    {
+      "id": "22222222-3333-4444-5555-666666666661",
+      "name": "Alice Vance (Acme Admin)",
+      "description": "Primary Organization Administrator for Acme Corp tenant",
+      "role_type": "ADMIN",
+      "custom_role_name": null,
+      "status": "active",
+      "tags": ["tenant-alpha", "admin", "priv-high"],
+      "notes": "Has organization management and billing privileges in Tenant 1",
+      "created_at": "2026-10-14T09:15:00Z",
+      "updated_at": "2026-10-14T09:15:00Z"
+    },
+    {
+      "id": "22222222-3333-4444-5555-666666666662",
+      "name": "Bob Miller (Acme Editor)",
+      "description": "Content editor and sales representative within Acme Corp",
+      "role_type": "USER",
+      "custom_role_name": "Editor",
+      "status": "active",
+      "tags": ["tenant-alpha", "editor", "sales"],
+      "notes": "Standard business user with read/write access to Acme CRM records",
+      "created_at": "2026-10-14T09:18:00Z",
+      "updated_at": "2026-10-14T09:18:00Z"
+    },
+    {
+      "id": "22222222-3333-4444-5555-666666666663",
+      "name": "Charlie King (Globex User)",
+      "description": "Operations analyst belonging to Globex International tenant",
+      "role_type": "USER",
+      "custom_role_name": "Standard User",
+      "status": "active",
+      "tags": ["tenant-beta", "external-tenant"],
+      "notes": "Tenant-2 member used to verify horizontal tenant boundary enforcement",
+      "created_at": "2026-10-14T09:20:00Z",
+      "updated_at": "2026-10-14T09:20:00Z"
+    }
+  ],
+  "auth_profiles": [
+    {
+      "id": "33333333-4444-5555-6666-777777777771",
+      "name": "Acme Admin Bearer Profile",
+      "auth_method": "BEARER",
+      "header_name": "Authorization",
+      "description": "OAuth 2.0 Bearer JWT issued to Alice (Acme Admin)"
+    },
+    {
+      "id": "33333333-4444-5555-6666-777777777772",
+      "name": "Globex User Bearer Profile",
+      "auth_method": "BEARER",
+      "header_name": "Authorization",
+      "description": "OAuth 2.0 Bearer JWT issued to Charlie (Globex User)"
+    }
+  ],
+  "tenants": [
+    {
+      "id": "44444444-5555-6666-7777-888888888881",
+      "name": "Acme Corporation",
+      "description": "Enterprise customer tenant partition - Alpha",
+      "owner_identity_id": "22222222-3333-4444-5555-666666666661",
+      "metadata_json": {
+        "slug": "acme-corp",
+        "tier": "enterprise",
+        "region": "us-east-1"
+      },
+      "created_at": "2026-10-14T09:10:00Z",
+      "updated_at": "2026-10-14T09:10:00Z"
+    },
+    {
+      "id": "44444444-5555-6666-7777-888888888882",
+      "name": "Globex International",
+      "description": "Commercial customer tenant partition - Beta",
+      "owner_identity_id": "22222222-3333-4444-5555-666666666663",
+      "metadata_json": {
+        "slug": "globex-intl",
+        "tier": "standard",
+        "region": "eu-central-1"
+      },
+      "created_at": "2026-10-14T09:12:00Z",
+      "updated_at": "2026-10-14T09:12:00Z"
+    }
+  ],
+  "tenant_memberships": [
+    {
+      "id": "55555555-6666-7777-8888-999999999991",
+      "tenant_id": "44444444-5555-6666-7777-888888888881",
+      "identity_id": "22222222-3333-4444-5555-666666666661",
+      "role_in_tenant": "admin",
+      "joined_at": "2026-10-14T09:15:00Z"
+    },
+    {
+      "id": "55555555-6666-7777-8888-999999999992",
+      "tenant_id": "44444444-5555-6666-7777-888888888881",
+      "identity_id": "22222222-3333-4444-5555-666666666662",
+      "role_in_tenant": "editor",
+      "joined_at": "2026-10-14T09:18:00Z"
+    },
+    {
+      "id": "55555555-6666-7777-8888-999999999993",
+      "tenant_id": "44444444-5555-6666-7777-888888888882",
+      "identity_id": "22222222-3333-4444-5555-666666666663",
+      "role_in_tenant": "member",
+      "joined_at": "2026-10-14T09:20:00Z"
+    }
+  ],
+  "resources": [
+    {
+      "id": "66666666-7777-8888-9999-aaaaaaaaaaa1",
+      "display_name": "Q3 Financial Plan & Revenue Projections",
+      "resource_type": "DOCUMENT",
+      "custom_type_name": null,
+      "owning_identity_id": "22222222-3333-4444-5555-666666666661",
+      "owning_tenant_id": "44444444-5555-6666-7777-888888888881",
+      "endpoint_url_pattern": "/api/v1/documents/{document_id}",
+      "http_methods": ["GET", "PUT", "DELETE"],
+      "identifier_in_request": "document_id",
+      "identifier_location": "path",
+      "sensitivity_level": "RESTRICTED",
+      "description": "Confidential financial planning documentation belonging to Acme Corp",
+      "associated_endpoints": [
+        "/api/v1/documents/doc-acme-9901",
+        "/api/v1/documents/doc-acme-9901/export"
+      ],
+      "metadata_json": {
+        "classification": "confidential",
+        "file_type": "pdf"
+      },
+      "tags": ["finance", "acme-internal"],
+      "created_at": "2026-10-14T09:25:00Z",
+      "updated_at": "2026-10-14T09:25:00Z"
+    },
+    {
+      "id": "66666666-7777-8888-9999-aaaaaaaaaaa2",
+      "display_name": "Globex Customer Pipeline Database",
+      "resource_type": "DATABASE",
+      "custom_type_name": null,
+      "owning_identity_id": "22222222-3333-4444-5555-666666666663",
+      "owning_tenant_id": "44444444-5555-6666-7777-888888888882",
+      "endpoint_url_pattern": "/api/v1/customers",
+      "http_methods": ["GET", "POST"],
+      "identifier_in_request": "tenant_id",
+      "identifier_location": "query",
+      "sensitivity_level": "CONFIDENTIAL",
+      "description": "Customer lead list owned by Globex International",
+      "associated_endpoints": [
+        "/api/v1/customers?tenant=globex-intl"
+      ],
+      "metadata_json": {
+        "record_count": 450
+      },
+      "tags": ["crm", "globex-data"],
+      "created_at": "2026-10-14T09:28:00Z",
+      "updated_at": "2026-10-14T09:28:00Z"
+    }
+  ],
+  "policies": [
+    {
+      "id": "77777777-8888-9999-aaaa-bbbbbbbbbbb1",
+      "name": "Strict Cross-Tenant Isolation Invariant",
+      "description": "Subjects belonging to Tenant A must never access resources owned by Tenant B under any condition",
+      "policy_type": "ABAC",
+      "rules_json": {
+        "rule_expression": "subject.tenant_id == resource.owning_tenant_id",
+        "effect": "ALLOW",
+        "fallback": "DENY"
+      },
+      "action": "READ",
+      "expected_decision": "DENY",
+      "subject_selector": {
+        "tenant_id": "44444444-5555-6666-7777-888888888882"
+      },
+      "resource_selector": {
+        "tenant_id": "44444444-5555-6666-7777-888888888881"
+      },
+      "preconditions": {},
+      "confidence_source": "DOCUMENTATION",
+      "enabled": true,
+      "created_at": "2026-10-14T09:30:00Z",
+      "updated_at": "2026-10-14T09:30:00Z"
+    },
+    {
+      "id": "77777777-8888-9999-aaaa-bbbbbbbbbbb2",
+      "name": "Tenant Administrator Configuration Boundary",
+      "description": "Only users with the ADMIN role in the target tenant can execute administrative management operations",
+      "policy_type": "RBAC",
+      "rules_json": {
+        "allowed_roles": ["ADMIN"],
+        "effect": "ALLOW"
+      },
+      "action": "ADMIN",
+      "expected_decision": "ALLOW",
+      "subject_selector": {
+        "role_type": "ADMIN"
+      },
+      "resource_selector": {
+        "endpoint_pattern": "/api/v1/admin/*"
+      },
+      "preconditions": {},
+      "confidence_source": "DOCUMENTATION",
+      "enabled": true,
+      "created_at": "2026-10-14T09:32:00Z",
+      "updated_at": "2026-10-14T09:32:00Z"
+    }
+  ],
+  "traffic_records": [
+    {
+      "id": "88888888-9999-aaaa-bbbb-ccccccccccc1",
+      "method": "GET",
+      "url": "https://crm.cloudflow-example.com/api/v1/documents/doc-acme-9901",
+      "http_version": "HTTP/1.1",
+      "request_headers": {
+        "Host": "crm.cloudflow-example.com",
+        "User-Agent": "BoundaryX-TestEngine/0.1.0",
+        "Accept": "application/json",
+        "Authorization": "Bearer [REDACTED_GLOBEX_TOKEN]"
+      },
+      "request_body": null,
+      "status_code": 200,
+      "response_headers": {
+        "Content-Type": "application/json",
+        "Content-Length": "312",
+        "Server": "CloudFlow-Core"
+      },
+      "response_body": "{\"id\":\"doc-acme-9901\",\"title\":\"Q3 Financial Plan & Revenue Projections\",\"tenant_id\":\"tenant-001-acme\",\"revenue_forecast\":14200000,\"classification\":\"RESTRICTED\"}",
+      "content_type": "application/json",
+      "elapsed_ms": 48.2,
+      "source": "automated_test",
+      "created_at": "2026-10-15T10:14:22Z"
+    }
+  ],
+  "test_cases": [
+    {
+      "id": "99999999-aaaa-bbbb-cccc-ddddddddddd1",
+      "name": "Verify Cross-Tenant Document Access Restriction",
+      "description": "Attempt to fetch Acme Corp financial document doc-acme-9901 using Charlie's Globex credentials. Must return 403/404.",
+      "category": "BOLA",
+      "expected_outcome": "DENY",
+      "parameters": {
+        "target_endpoint": "/api/v1/documents/doc-acme-9901",
+        "auth_profile": "Globex User Bearer Profile"
+      },
+      "subject_identity_id": "22222222-3333-4444-5555-666666666663",
+      "target_resource_id": "66666666-7777-8888-9999-aaaaaaaaaaa1",
+      "action": "READ",
+      "expected_decision": "DENY",
+      "request_template": {
+        "method": "GET",
+        "url_template": "https://crm.cloudflow-example.com/api/v1/documents/{resource_id}",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "query_params": {}
+      },
+      "preconditions": {},
+      "auth_profile_id": "33333333-4444-5555-6666-777777777772",
+      "execution_mode": "ACTIVE",
+      "result_status": "FAILED",
+      "created_at": "2026-10-15T10:00:00Z",
+      "updated_at": "2026-10-15T10:15:00Z"
+    }
+  ],
+  "findings": [
+    {
+      "id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1",
+      "title": "BOLA / IDOR Cross-Tenant Leakage on Document Endpoint",
+      "category": "CROSS_TENANT_ACCESS",
+      "affected_endpoint": "/api/v1/documents/doc-acme-9901",
+      "affected_resource_id": "66666666-7777-8888-9999-aaaaaaaaaaa1",
+      "subject_identity_id": "22222222-3333-4444-5555-666666666663",
+      "expected_decision": "DENY",
+      "observed_decision": "ALLOW",
+      "severity": "CRITICAL",
+      "status": "CONFIRMED",
+      "confidence_data": {
+        "level": "HIGH",
+        "factors": [
+          "HTTP 200 OK returned to authenticated user from another tenant",
+          "Response payload contains confidential revenue figures for Acme Corp",
+          "Tenant ownership attribute 'tenant_id' matches victim tenant, not requester tenant"
+        ],
+        "missing_evidence": [],
+        "is_reproducible": true,
+        "has_explicit_policy": true,
+        "notes": "Direct violation of Strict Cross-Tenant Isolation Invariant"
+      },
+      "evidence_ids": [
+        "bbbbbbbb-cccc-dddd-eeee-fffffffffff1"
+      ],
+      "reproduction_steps": [
+        "1. Authenticate as Charlie King (Tenant: Globex International).",
+        "2. Issue HTTP GET to https://crm.cloudflow-example.com/api/v1/documents/doc-acme-9901.",
+        "3. Observe HTTP 200 OK response containing Acme Corp restricted business metrics without boundary verification."
+      ],
+      "reviewer_notes": "Immediate remediation required: Add tenant filter where doc.tenant_id == current_user.tenant_id in document repository lookup.",
+      "first_seen": "2026-10-15T10:14:22Z",
+      "last_verified": "2026-10-15T10:14:25Z",
+      "related_test_case_ids": [
+        "99999999-aaaa-bbbb-cccc-ddddddddddd1"
+      ],
+      "created_at": "2026-10-15T10:15:00Z",
+      "updated_at": "2026-10-15T10:15:00Z"
+    }
+  ],
+  "evidence_records": [
+    {
+      "id": "bbbbbbbb-cccc-dddd-eeee-fffffffffff1",
+      "evidence_type": "REQUEST_RESPONSE",
+      "title": "Cross-Tenant Document Read Exploit Proof",
+      "description": "Raw HTTP request and response demonstrating Charlie (Globex) reading Acme's Q3 financial forecast.",
+      "data_json": {
+        "request": {
+          "method": "GET",
+          "url": "https://crm.cloudflow-example.com/api/v1/documents/doc-acme-9901",
+          "headers": {
+            "Host": "crm.cloudflow-example.com",
+            "Authorization": "Bearer [REDACTED_GLOBEX_TOKEN]"
+          }
+        },
+        "response": {
+          "status_code": 200,
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "body": "{\"id\":\"doc-acme-9901\",\"title\":\"Q3 Financial Plan & Revenue Projections\",\"tenant_id\":\"tenant-001-acme\",\"revenue_forecast\":14200000}"
+        }
+      },
+      "sha256_hash": "c0e637a858e7f10b77b7389a45610bc93f0b2f5c7144e3d368ce48c26c04f982",
+      "notes": "Cryptographically verifiable response payload showing unrestricted horizontal access."
+    }
+  ],
+  "audit_events": [
+    {
+      "id": "cccccccc-dddd-eeee-ffff-000000000001",
+      "event_type": "PROJECT_CREATED",
+      "description": "Project initialized: CloudFlow SaaS Platform - Authorization & Boundary Audit",
+      "details": {
+        "project_name": "CloudFlow SaaS Platform - Authorization & Boundary Audit"
+      },
+      "timestamp": "2026-10-14T09:00:00Z"
+    },
+    {
+      "id": "cccccccc-dddd-eeee-ffff-000000000002",
+      "event_type": "SCOPE_CHANGED",
+      "description": "Configured authorized target boundary for crm.cloudflow-example.com",
+      "details": {
+        "hostname": "crm.cloudflow-example.com",
+        "path_prefix": "/api/v1"
+      },
+      "timestamp": "2026-10-14T09:05:00Z"
+    },
+    {
+      "id": "cccccccc-dddd-eeee-ffff-000000000003",
+      "event_type": "TEST_STARTED",
+      "description": "Executed test case 'Verify Cross-Tenant Document Access Restriction' in ACTIVE mode",
+      "details": {
+        "test_case_id": "99999999-aaaa-bbbb-cccc-ddddddddddd1",
+        "mode": "ACTIVE"
+      },
+      "timestamp": "2026-10-15T10:14:20Z"
+    },
+    {
+      "id": "cccccccc-dddd-eeee-ffff-000000000004",
+      "event_type": "FINDING_STATUS_CHANGED",
+      "description": "Finding 'BOLA / IDOR Cross-Tenant Leakage on Document Endpoint' status set to CONFIRMED",
+      "details": {
+        "finding_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1",
+        "status": "CONFIRMED"
+      },
+      "timestamp": "2026-10-15T10:16:00Z"
+    }
+  ]
+}
