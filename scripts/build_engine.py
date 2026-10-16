@@ -66,6 +66,8 @@ def build_sidecar(target_name: str | None = None, skip_verify: bool = False) -> 
     # Prepare data separators
     sep = os.pathsep
     migrations_data = f"{migrations_dir}{sep}migrations"
+    config_dir = project_root / "config"
+    config_data = f"{config_dir}{sep}config"
 
     pyinstaller_cmd = [
         sys.executable,
@@ -85,6 +87,8 @@ def build_sidecar(target_name: str | None = None, skip_verify: bool = False) -> 
         str(engine_dir),
         "--add-data",
         migrations_data,
+        "--add-data",
+        config_data,
         "--collect-all",
         "boundaryx",
         "--collect-all",

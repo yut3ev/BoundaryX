@@ -1,5 +1,6 @@
 import logging
 from pathlib import Path
+import sys
 from typing import Any, Dict, List
 
 import yaml
@@ -68,11 +69,36 @@ class ToolRegistry:
         self._init_adapters()
 
     def _load_manifest(self) -> Dict[str, Any]:
-        if not self.manifest_path.exists():
-            logger.warning("Manifest not found at %s", self.manifest_path)
-            return {"tools": []}
+        candidates = [self.manifest_path]
+        if hasattr(sys, "_MEIPASS"):
+            candidates.append(Path(sys._MEIPASS) / "config" / "tool-manifest.yaml")
+        candidates.extend([
+            Path(__file__).resolve().parent.parent.parent.parent / "config" / "tool-manifest.yaml",
+            Path(__file__).resolve().parent.parent.parent / "config" / "tool-manifest.yaml",
+            Path.cwd() / "config" / "tool-manifest.yaml",
+        ])
+
+        target = None
+        for cand in candidates:
+            if cand and cand.exists():
+                target = cand
+                break
+
+        if not target:
+            logger.warning("Manifest not found at %s or fallback paths. Using standard tool registry default.", self.manifest_path)
+            return {
+                "tools": [
+                    {"id": "subfinder", "title": "Subfinder", "executable": "subfinder", "capability": "passive_subdomain_discovery", "network_activity": "provider_dependent_passive"},
+                    {"id": "dnsx", "title": "dnsx", "executable": "dnsx", "capability": "dns_resolution", "network_activity": "active_dns"},
+                    {"id": "httpx", "title": "httpx", "executable": "httpx", "capability": "http_probe_metadata", "network_activity": "active_http"},
+                    {"id": "katana", "title": "Katana", "executable": "katana", "capability": "bounded_web_crawl", "network_activity": "active_http"},
+                    {"id": "nuclei", "title": "Nuclei", "executable": "nuclei", "capability": "selected_template_checks", "network_activity": "active_http"},
+                    {"id": "ffuf", "title": "ffuf", "executable": "ffuf", "capability": "bounded_path_or_parameter_fuzzing", "network_activity": "active_http"},
+                ]
+            }
+
         try:
-            with open(self.manifest_path, "r", encoding="utf-8") as f:
+            with open(target, "r", encoding="utf-8") as f:
                 return yaml.safe_load(f) or {"tools": []}
         except Exception as e:
             logger.error("Failed to parse tool manifest: %s", e)
