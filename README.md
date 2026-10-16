@@ -103,7 +103,7 @@ npm run dev
 
 ### Step 4: Run the Engine in IPC Mode (Manual Smoke Test)
 ```bash
-cd ../engine
+cd ../../engine
 python -m boundaryx.cli --ipc
 ```
 

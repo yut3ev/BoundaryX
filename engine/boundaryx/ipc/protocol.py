@@ -1,5 +1,5 @@
 import json
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 import uuid
 
 from pydantic import BaseModel, Field
@@ -62,11 +62,11 @@ def parse_ipc_line(line: str) -> IPCRequest:
     if not isinstance(data, dict):
         raise IPCError("INVALID_FORMAT", "IPC request must be a JSON object")
 
-    req_id = data.get("request_id")
+    req_id = data.get("request_id") or data.get("id")
     command = data.get("command")
 
     if not req_id or not command:
-        raise IPCError("MISSING_FIELDS", "IPC request requires 'request_id' and 'command'")
+        raise IPCError("MISSING_FIELDS", "IPC request requires 'request_id' (or 'id') and 'command'")
 
     version = data.get("protocol_version", PROTOCOL_VERSION)
     if version.split(".")[0] != PROTOCOL_VERSION.split(".")[0]:
@@ -80,8 +80,10 @@ def parse_ipc_line(line: str) -> IPCRequest:
     )
 
 
-def serialize_ipc_response(resp: IPCResponse) -> str:
-    return json.dumps(resp.model_dump(), separators=(",", ":"))
+def serialize_ipc_response(resp: Union[IPCResponse, Dict[str, Any]]) -> str:
+    if hasattr(resp, "model_dump"):
+        return json.dumps(resp.model_dump(), separators=(",", ":"))
+    return json.dumps(resp, separators=(",", ":"))
 
 
 def serialize_ipc_event(event: IPCEvent) -> str:

@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
 from boundaryx.domain.enums import MatcherType, ScopeRuleType
@@ -46,6 +47,8 @@ class CommandDispatcher:
 
         self._handlers: Dict[str, Callable[[Dict[str, Any]], Any]] = {
             "ping": self._cmd_ping,
+            "system.ping": self._cmd_ping,
+            "tools.registry": self._cmd_tools_registry,
             "programs.list": self._cmd_programs_list,
             "programs.get": self._cmd_programs_get,
             "programs.create": self._cmd_programs_create,
@@ -108,6 +111,14 @@ class CommandDispatcher:
     # Core Handlers
     def _cmd_ping(self, payload: Dict[str, Any]) -> Dict[str, Any]:
         return {"pong": True, "engine": "boundaryx", "version": "0.1.0"}
+
+    def _cmd_tools_registry(self, payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+        manifest_path = Path(__file__).resolve().parent.parent.parent.parent / "config" / "tool-manifest.yaml"
+        if not manifest_path.exists():
+            manifest_path = Path(__file__).resolve().parent.parent.parent / "config" / "tool-manifest.yaml"
+        from boundaryx.adapters.registry import ToolRegistry
+        registry = ToolRegistry(manifest_path)
+        return registry.list_all_tools()
 
     def _cmd_programs_list(self, payload: Dict[str, Any]) -> List[Dict[str, Any]]:
         include_archived = payload.get("include_archived", False)
