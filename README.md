@@ -41,14 +41,21 @@ An Arabic quick-start guide is available at [docs/QUICKSTART_AR.md](docs/QUICKST
 
 ## 3. Platform Support & Maturity Status
 
-- **Development Status:** Pre-Release Candidate (v0.1.0-RC1).
+- **Development Status:** Stable Initial Release ([v0.1.1](https://github.com/yut3ev/BoundaryX/releases/tag/v0.1.1)).
 - **Verified Host Platforms:**
-  - Windows 11 x86_64 (Python 3.13.13, Node 24.16.0, Tauri CLI 2.0)
-  - Ubuntu 24.04.5 LTS x86_64 (Tested in clean container: 43/43 engine tests passing)
-- **Verified Test Suite:** 212 passed unit and security tests (43 engine tests + 169 domain tests, 0 failures).
-- **Unverified / Experimental Paths:**
-  - Linux `.deb` / AppImage desktop installer builds require native `libwebkit2gtk-4.1-dev` build environments. Python engine packaging is fully verified via PyInstaller sidecar recipes.
-  - macOS builds are structurally supported by Tauri but have not been formally smoke-tested on physical Apple hardware.
+  - Ubuntu 22.04 / 24.04 LTS x86_64: Native `.deb` (42.50 MB) and `.AppImage` (117.51 MB) installer bundles compiled and verified via GitHub Actions release pipeline.
+  - Windows 11 x86_64: Native standalone sidecar packaging verified with PyInstaller.
+- **Verified Test Suite:**
+  - 43 Python Engine unit and integration tests (0 failures).
+  - 169 Domain security, redaction, and scope tests (0 failures).
+  - 1 Desktop IPC supervisor smoke test (`apps/desktop/src-tauri/tests/ipc_smoke_test.rs`) verifying live NDJSON forwarding, program creation, scope evaluation, and child-process cleanup (0 failures).
+- **Official Release Artifacts ([v0.1.1](https://github.com/yut3ev/BoundaryX/releases/tag/v0.1.1)):**
+  - `BoundaryX_0.1.0_amd64.deb` (`44,565,734 bytes`, SHA-256: `dc4d9f1fca2e2a4c9775abf10c0516bcdf47bb9a21dba814ee95ad63ab05f058`)
+  - `BoundaryX_0.1.0_amd64.AppImage` (`123,218,424 bytes`, SHA-256: `4205bd82387cf8fb17ee76fecc19d3e08f5d1ac64e5852c20643956ccfc5843c`)
+  - `SBOM.json` (`66,867 bytes`, CycloneDX 1.5, 404 components, SHA-256: `64a62b1ab2885c5bbf557ee879ee7801560ac5fe18e62a700ce9db67dbc4e9fe`)
+  - `SHA256SUMS.txt` (cryptographically validated)
+- **Experimental / Pending Paths:**
+  - macOS builds are structurally supported by Tauri v2 but pending formal code signing on physical Apple silicon hardware.
 
 ---
 
