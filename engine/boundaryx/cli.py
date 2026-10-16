@@ -88,7 +88,15 @@ def main() -> None:
     db = Database(db_path)
 
     # Migrations
-    migrations_dir = Path(__file__).resolve().parent.parent / "migrations"
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        meipass_migrations = Path(sys._MEIPASS) / "migrations"
+        if meipass_migrations.exists():
+            migrations_dir = meipass_migrations
+        else:
+            migrations_dir = Path(__file__).resolve().parent.parent / "migrations"
+    else:
+        migrations_dir = Path(__file__).resolve().parent.parent / "migrations"
+
     migration_runner = MigrationRunner(db, migrations_dir)
     applied = migration_runner.run_pending_migrations()
     if applied:
