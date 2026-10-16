@@ -26,18 +26,15 @@ jobs:
         uses: astral-sh/setup-uv@v3
         with:
           enable-cache: true
-
-      - name: Install dependencies
-        run: |
-          uv pip install -e "./engine[dev]"
+          cache-dependency-glob: "engine/uv.lock"
 
       - name: Run Ruff Linter
         run: |
-          uv run ruff check --config engine/pyproject.toml engine/
+          uv run --project engine ruff check --config engine/pyproject.toml engine/
 
       - name: Run Pytest Test Suite
         run: |
-          uv run pytest engine/tests -v
+          uv run --project engine pytest engine/tests -v
 
   frontend-check:
     name: Desktop Frontend Build & Lint
@@ -51,12 +48,12 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
-          cache-dependency-path: apps/desktop/package.json
+          cache-dependency-path: apps/desktop/package-lock.json
 
       - name: Install dependencies
         run: |
           cd apps/desktop
-          npm ci || npm install
+          npm ci
 
       - name: TypeScript Typecheck
         run: |
