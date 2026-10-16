@@ -4,8 +4,8 @@ import time
 from typing import Any, Callable, Dict, List, Optional
 
 from boundaryx.adapters.base import ToolAdapter
-from boundaryx.domain.enums import AssetType, JobStatus, ScopeStatus
-from boundaryx.domain.models import Asset, AssetObservation, Job, JobEvent, new_id, utc_now_iso
+from boundaryx.domain.enums import AssetType, JobStatus
+from boundaryx.domain.models import Asset, AssetObservation, Job, JobEvent
 from boundaryx.scope.guard import ScopeGuard
 from boundaryx.storage.repositories import AssetRepository, JobRepository, ScopeRuleRepository
 

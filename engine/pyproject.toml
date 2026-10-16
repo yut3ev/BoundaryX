@@ -43,6 +43,10 @@ include = ["boundaryx*"]
 target-version = "py312"
 line-length = 120
 
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+ignore = ["E501"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]

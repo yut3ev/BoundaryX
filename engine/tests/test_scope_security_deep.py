@@ -4,9 +4,7 @@ from boundaryx.domain.enums import MatcherType, ScopeRuleType, ScopeStatus
 from boundaryx.domain.models import ScopeRule
 from boundaryx.http.client import HardenedHttpClient, ScopeDenialError
 from boundaryx.scope.canonicalizer import (
-    ScopeCanonicalizationError,
     canonicalize_host,
-    parse_and_canonicalize_target,
 )
 from boundaryx.scope.guard import ScopeGuard
 

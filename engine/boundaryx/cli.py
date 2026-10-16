@@ -3,7 +3,6 @@ import logging
 from pathlib import Path
 import signal
 import sys
-from typing import Optional
 
 from boundaryx.config import get_default_data_dir, setup_engine_logging
 from boundaryx.ipc.dispatcher import CommandDispatcher

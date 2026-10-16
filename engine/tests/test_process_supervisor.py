@@ -5,7 +5,6 @@ import time
 import pytest
 
 from boundaryx.jobs.process_supervisor import (
-    ProcessExecutionError,
     ProcessSupervisor,
     ProcessTimeoutError,
 )

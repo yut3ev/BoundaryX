@@ -1,6 +1,6 @@
-from typing import Any, Dict, List, Optional, Set
+from typing import Dict, Set
 
-from boundaryx.domain.enums import Confidence, FindingStatus, Severity
+from boundaryx.domain.enums import FindingStatus
 from boundaryx.domain.models import Finding
 from boundaryx.storage.repositories import FindingRepository
 

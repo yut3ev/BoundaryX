@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.0-RC1] - 2026-10-16
+
+### Hardening & Pre-Release Verification Pass
+- **Engine-Level Scope Enforcement**: Added `HardenedHttpClient` with pre-flight scope verification and hop-by-hop redirect chain validation. URLs with userinfo/credentials (`@`) are strictly rejected.
+- **Deep Scope Security Verification**: Added `test_scope_security_deep.py` testing IDNA punycode homographs, suffix/prefix spoofing, and CIDR/IP boundaries (all 43 engine tests passing).
+- **Gemini Analyst Security Guardrails**: Upgraded to official `google-genai` SDK with mandatory human consent, context redaction preview, prompt injection delimiter fences, and citation validation against hallucinated evidence IDs.
+- **Desktop Shell & Build Hardening**: Fixed strict TypeScript issues across all 10 workbench views; committed deterministic `package-lock.json`; verified production Vite bundling.
+- **Clean Container Verification**: Tested and passed in an isolated `ubuntu:24.04` container with fresh Git clone.
+- **Supply Chain & Release Automation**: Pinned GitHub Actions workflows, generated CycloneDX SBOM (`docs/SBOM.json`), and created automated packaging scripts.
+
+---
+
 ## [0.1.0] - 2026-10-15
 
 ### Initial Production Release

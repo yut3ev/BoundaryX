@@ -1,5 +1,4 @@
-import React from "react";
-import { Play, XCircle, CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
+import { XCircle, CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
 import { Job } from "../../services/ipc";
 
 interface JobTrayProps {

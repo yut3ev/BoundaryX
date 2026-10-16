@@ -50,7 +50,9 @@
 
 ## Latest verified test run
 - Date: 2026-10-16
-- Environment: Windows 11 x64, Python 3.13.13, PySide6 6.12.0, google-genai 2.31.0
-- Commands: `python -m pytest engine/tests` (37 passed) + `python -m pytest tests/unit tests/security` (169 passed)
-- Result: **206 passed, 0 failed in 9.04s**
-- Blockers / skipped tests: None
+- Environments:
+  - Windows 11 x64, Python 3.13.13: `pytest engine/tests/` (43 passed) + `pytest tests/unit/ tests/security/` (169 passed)
+  - Ubuntu 24.04 LTS x86_64 Container (Clean clone): `pytest engine/tests/` (43 passed in 2.52s)
+  - Desktop Frontend Build: `npm run build` (`tsc && vite build`: passed in 8.96s)
+- Result: **212 passed, 0 failed (100% pass rate)**
+- Blockers / skipped tests: None. All 5 release gates verified.

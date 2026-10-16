@@ -1,9 +1,8 @@
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Optional, Tuple
 
 from boundaryx.ai.citation_validator import CitationValidator
 from boundaryx.ai.provider import AIProvider, AnalysisRequest
 from boundaryx.ai.schemas import AnalysisOutput, FactItem, HypothesisItem, NextStepItem
-from boundaryx.domain.enums import AnalysisType
 
 
 class MockAIProvider(AIProvider):

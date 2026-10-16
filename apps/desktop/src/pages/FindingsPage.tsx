@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Bug, CheckCircle2, XCircle, AlertCircle, CopyCheck } from "lucide-react";
 import { Finding, Program, ipc } from "../services/ipc";
 
 interface FindingsPageProps {
@@ -35,7 +34,9 @@ export const FindingsPage: React.FC<FindingsPageProps> = ({
     <div className="page-body">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
         <div>
-          <h2 style={{ fontSize: "1.4rem", fontWeight: 700 }}>Findings Triage Workbench</h2>
+          <h2 style={{ fontSize: "1.4rem", fontWeight: 700 }}>
+            Findings Triage Workbench {program ? `— ${program.name}` : ""}
+          </h2>
           <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>
             Candidate authorization flaws require explicit human review and cryptographic evidence before release.
           </p>

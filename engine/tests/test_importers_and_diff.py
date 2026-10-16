@@ -2,7 +2,7 @@ from pathlib import Path
 import tempfile
 
 from boundaryx.domain.diff import calculate_asset_diff
-from boundaryx.domain.enums import AssetType, MatcherType, ScopeRuleType, ScopeStatus
+from boundaryx.domain.enums import AssetType, MatcherType, ScopeRuleType
 from boundaryx.domain.models import Asset, Program, ScopeRule
 from boundaryx.http.har_importer import HarImporter
 from boundaryx.http.openapi_importer import OpenAPIImporter

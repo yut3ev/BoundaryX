@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Upload, FileCode, CheckCircle, Shield } from "lucide-react";
+import { Upload, Shield } from "lucide-react";
 import { Program } from "../services/ipc";
 
 interface TrafficPageProps {
@@ -7,7 +7,6 @@ interface TrafficPageProps {
 }
 
 export const TrafficPage: React.FC<TrafficPageProps> = ({ program }) => {
-  const [selectedFormat, setSelectedFormat] = useState<"har" | "openapi">("har");
   const [importStatus, setImportStatus] = useState<string | null>(null);
 
   const sampleHttpExchanges = [
@@ -46,7 +45,7 @@ export const TrafficPage: React.FC<TrafficPageProps> = ({ program }) => {
         <div>
           <h2 style={{ fontSize: "1.4rem", fontWeight: 700 }}>Traffic & API Explorer</h2>
           <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>
-            Analyze HTTP Archive (HAR 1.2) traces and OpenAPI/Swagger specifications with automatic credential scrubbing.
+            Analyze HTTP Archive (HAR 1.2) traces and OpenAPI specifications{program ? ` for ${program.name}` : ""} with automatic credential scrubbing.
           </p>
         </div>
         <button

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Key, Shield, Sparkles, CheckCircle, Database } from "lucide-react";
+import { Key, Sparkles, Database } from "lucide-react";
 import { ipc } from "../services/ipc";
 
 export const SettingsPage: React.FC = () => {

@@ -1,138 +1,193 @@
 # BoundaryX
 
-[![CI](https://github.com/boundaryx/boundaryx/actions/workflows/ci.yml/badge.svg)](https://github.com/boundaryx/boundaryx/actions/workflows/ci.yml)
+[![CI](https://github.com/yut3ev/BoundaryX/actions/workflows/ci.yml/badge.svg)](https://github.com/yut3ev/BoundaryX/actions/workflows/ci.yml)
+[![Release](https://github.com/yut3ev/BoundaryX/actions/workflows/release.yml/badge.svg)](https://github.com/yut3ev/BoundaryX/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python: 3.12+](https://img.shields.io/badge/Python-3.12%2B-brightgreen.svg)](https://www.python.org/)
 [![Tauri: v2](https://img.shields.io/badge/Tauri-v2-orange.svg)](https://v2.tauri.app/)
+[![TypeScript: 5.6](https://img.shields.io/badge/TypeScript-5.6-blue.svg)](https://www.typescriptlang.org/)
 
-> **BoundaryX** is an enterprise-grade open-source desktop security research workbench for authorized web penetration testing and bug bounty reconnaissance.
+> **BoundaryX** is an open-source desktop security research workbench for authorized web application penetration testing, authorization flaw analysis, and bug bounty reconnaissance. It provides a boundary-enforced environment connecting scope management, asset discovery, deterministic test planning, and cryptographically verified evidence reporting.
 
-BoundaryX establishes an unbroken, cryptographically verified chain of evidence:
-$$\text{Scope Rules} \longrightarrow \text{Asset Inventory} \longrightarrow \text{Supervised Recon} \longrightarrow \text{HTTP Evidence} \longrightarrow \text{Test Hypotheses} \longrightarrow \text{Human Verification} \longrightarrow \text{Findings} \longrightarrow \text{Auditor Reports}$$
-
----
-
-## 1. Core Architecture & Highlights
-
-- **Desktop Shell**: Tauri v2 desktop host with hardware-accelerated rendering and secure, allowlisted IPC.
-- **Frontend Workbench (`apps/desktop`)**: React 18 + TypeScript dark-first security UI across 10 specialized views: Overview, Programs & Scope, Assets, Recon Jobs, Traffic & API, Test Planner, Findings, Reports, Toolchain, and Settings.
-- **Security Engine (`engine`)**: Python 3.12+ engine managed by `uv` with clean layered domain boundaries.
-- **Strict Scope Guard**: Boundary-aware canonicalization, IDNA/Punycode normalization, deceptive suffix collision defenses (`evil-example.com` blocked), IPv4/IPv6 support, and hop-by-hop redirect validation.
-- **Tool Adapter Architecture**: Modular adapters for Subfinder, dnsx, httpx, Katana, Nuclei, and ffuf. Subprocess execution uses argv arrays (never `shell=True`), timeouts, output size bounds, and process-tree termination.
-- **Optional Gemini Analyst (BYOK)**: Native integration via Google's official `google-genai` SDK. Fully operational offline in **No-AI mode**. Credentials stored in local encrypted OS vaults (never SQLite or logs). Enforces strict prompt injection defenses, minimum context previews, explicit user consent, and citation validation against hallucinated evidence IDs.
-- **Evidence Vault & Reporting**: SHA-256 evidence integrity hashes and multi-format exports in Markdown, standalone HTML (with XSS defense), sanitized JSON, and CSV (with formula injection defense).
+An Arabic quick-start guide is available at [docs/QUICKSTART_AR.md](docs/QUICKSTART_AR.md).
 
 ---
 
-## 2. Repository Layout
+## 1. Feature Overview
 
-```text
-BoundaryX/
-├── apps/
-│   └── desktop/                  # Tauri v2 + React 18 + TypeScript frontend
-│       ├── src/                  # 10 core workbench views & layout components
-│       ├── src-tauri/            # Rust native shell, sidecar supervisor, and capabilities
-│       └── package.json
-├── engine/                       # Python 3.12+ security engine (managed with uv)
-│   ├── boundaryx/
-│   │   ├── domain/               # Relational entities, enums, and asset diff
-│   │   ├── scope/                # Canonicalizer, boundary matcher, ScopeGuard
-│   │   ├── storage/              # SQLite WAL engine, repositories, migrations
-│   │   ├── jobs/                 # Queue, rate limiting, process supervisor
-│   │   ├── adapters/             # Subfinder, dnsx, httpx, katana, nuclei, ffuf
-│   │   ├── http/                 # HAR 1.2, OpenAPI 3.0/2.0 YAML/JSON, raw HTTP
-│   │   ├── ai/                   # google-genai adapter, prompt injection defense, citations
-│   │   ├── findings/             # State machine, confidence scoring, deduplication
-│   │   ├── reporting/            # Markdown, standalone HTML, JSON, formula-safe CSV
-│   │   ├── security/             # RedactionEngine, SecretStore, AuditLogger
-│   │   └── ipc/                  # Stdin/stdout NDJSON protocol & dispatcher
-│   ├── migrations/               # Versioned SQL migrations (001_initial_schema.sql)
-│   ├── tests/                    # 37 passing unit & security tests
-│   └── pyproject.toml
-├── config/
-│   ├── tool-manifest.yaml        # Manifest for external toolchain integrations
-│   └── defaults.example.yaml     # Application configuration defaults
-├── docs/                         # Specifications, Threat Model, Architecture, Test Results
-│   ├── ARCHITECTURE.md
-│   ├── DATA_MODEL.md
-│   ├── GEMINI_ANALYST.md
-│   ├── INTEGRATIONS.md
-│   ├── PRODUCT_SPEC.md
-│   ├── TEST_PLAN.md
-│   ├── TEST_RESULTS.md           # 206 verified passing tests
-│   └── THREAT_MODEL.md
-├── scripts/
-│   ├── build_engine.py           # PyInstaller sidecar bundling script
-│   ├── package_linux.sh          # Linux build and packaging script (.deb, AppImage)
-│   └── generate_sbom.py          # CycloneDX SBOM generator
-├── .github/workflows/
-│   ├── ci.yml                    # Automated CI test suite
-│   └── release.yml               # Tag-based release pipeline
-├── TASKS.md                      # Implementation tracker with stage evidence
-└── LICENSE                       # MIT License
+- **Strict Engine-Level Scope Enforcement:** Zero-tolerance boundary protection implemented in the core engine. Automatically rejects suffix/prefix spoofing, IDNA homograph collisions, embedded credentials, and out-of-scope HTTP 3xx redirect hops.
+- **Unified Toolchain Orchestration:** Managed execution of community reconnaissance tools (Subfinder, HTTPx, dnsx, Katana, Nuclei, ffuf). Runs with strict argv arrays, scrubbed environments, rate limiters, and process-tree termination.
+- **Traffic & Specification Importers:** Native ingestion of HTTP Archive (HAR 1.2), OpenAPI/Swagger 2.0/3.0 (safe YAML loader), CSV, and JSON traffic logs with automated credential scrubbing.
+- **Evidence Integrity & Audit Vault:** SHA-256 cryptographic hashing on all stored evidence items. Findings require mandatory human review and linked evidence before reaching verified status.
+- **Multi-Format Auditor-Ready Reporting:** Generates standalone HTML (with strict XSS escaping), Markdown, sanitized JSON, and CSV exports (with spreadsheet formula injection defense).
+- **Optional Gemini Analyst (BYOK):** Optional assisted analysis using Google's official `google-genai` SDK. Operates fully offline in **No-AI mode**. When enabled, requires explicit user consent and redacted previews for every prompt, enforces XML boundary isolation, and validates citations against stored evidence IDs to filter hallucinated IDs.
+
+---
+
+## 2. Product Architecture
+
+![BoundaryX Architecture Overview](docs/assets/boundaryx-architecture.svg)
+
+### Architectural Flow
+
+![BoundaryX Workflow](docs/assets/boundaryx-workflow.svg)
+
+1. **Desktop Shell (`apps/desktop`):** Tauri v2 host window rendering a React 18 + TypeScript frontend styled with dark-first security UI across 10 specialized views: Overview, Programs, Assets, Jobs, Traffic, Test Planner, Findings, Reports, Toolchain, and Settings.
+2. **IPC Protocol Bridge:** High-performance newline-delimited JSON (NDJSON) over standard I/O (stdin/stdout) with a 10MB frame ceiling, structured event streaming, and an allowlisted command dispatcher. Operational logs are strictly routed to stderr.
+3. **Core Engine (`engine`):** Python 3.12+ backend encapsulating SQLite storage (WAL mode, foreign keys enabled), process supervisor, job orchestrator, and security/redaction engines.
+4. **Credential Vault:** Local encrypted store using OS Keyring integration with Fernet file vault fallback (`secrets.enc`). Keys and tokens are never written to SQLite, logs, or exports.
+
+---
+
+## 3. Platform Support & Maturity Status
+
+- **Development Status:** Pre-Release Candidate (v0.1.0-RC1).
+- **Verified Host Platforms:**
+  - Windows 11 x86_64 (Python 3.13.13, Node 24.16.0, Tauri CLI 2.0)
+  - Ubuntu 24.04.5 LTS x86_64 (Tested in clean container: 43/43 engine tests passing)
+- **Verified Test Suite:** 212 passed unit and security tests (43 engine tests + 169 domain tests, 0 failures).
+- **Unverified / Experimental Paths:**
+  - Linux `.deb` / AppImage desktop installer builds require native `libwebkit2gtk-4.1-dev` build environments. Python engine packaging is fully verified via PyInstaller sidecar recipes.
+  - macOS builds are structurally supported by Tauri but have not been formally smoke-tested on physical Apple hardware.
+
+---
+
+## 4. Prerequisites
+
+| Dependency | Minimum Version | Tested Version | Installation Link |
+| :--- | :--- | :--- | :--- |
+| **Python** | 3.12.0+ | 3.12.3 / 3.13.13 | [python.org](https://www.python.org/downloads/) |
+| **uv** (Recommended) | 0.10.0+ | 0.13.1 | [docs.astral.sh/uv](https://docs.astral.sh/uv/) |
+| **Node.js** | 20.0.0 LTS | 24.16.0 | [nodejs.org](https://nodejs.org/) |
+| **npm** | 10.0.0+ | 11.13.0 | Included with Node.js |
+| **Rust** (GUI build) | 1.75.0+ | 1.80.0+ | [rustup.rs](https://rustup.rs/) |
+
+---
+
+## 5. Quickstart & Fresh-Clone Setup
+
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/yut3ev/BoundaryX.git
+cd BoundaryX
 ```
 
----
-
-## 3. Quickstart & Installation
-
-### Developer Prerequisites
-- Node.js 20+ and `npm`
-- Python 3.12+ and `uv`
-- Rust stable toolchain (for Tauri desktop shell)
-
-### Build & Run Engine
+### Step 2: Set Up the Python Engine
 ```bash
-# 1. Install engine dependencies
 cd engine
-uv pip install -e ".[dev]"
 
-# 2. Run engine tests
-python -m pytest tests/
+# Create and activate virtual environment
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-# 3. Start engine in IPC sidecar mode
+# Install dependencies in editable mode
+pip install -e ".[dev]"
+
+# Run verified engine test suite
+pytest tests/ -v
+```
+
+### Step 3: Set Up and Build the Desktop Frontend
+```bash
+cd ../apps/desktop
+
+# Install frontend dependencies using committed lockfile
+npm install
+
+# Run TypeScript typechecks and production build
+npm run build
+
+# Start local Vite development server
+npm run dev
+```
+
+### Step 4: Run the Engine in IPC Mode (Manual Smoke Test)
+```bash
+cd ../engine
 python -m boundaryx.cli --ipc
 ```
 
-### Build & Run Desktop Frontend
+---
+
+## 6. Linux Packaging & Distribution
+
+The repository provides automated recipes for standalone binary packaging:
+
 ```bash
-# 1. Install frontend dependencies
-cd apps/desktop
-npm install
+# Package Python engine into standalone sidecar binary
+python scripts/build_engine.py
 
-# 2. Start frontend in development mode
-npm run dev
+# Build Linux .deb and AppImage distribution packages (on Ubuntu with WebKitGTK)
+bash scripts/package_linux.sh
+```
 
-# 3. Build standalone production desktop application
-npm run tauri build
+*Note:* Linux desktop binary compilation requires the following system packages:
+```bash
+sudo apt-get update && sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
 ```
 
 ---
 
-## 4. Linux Packaging (x86_64)
+## 7. External Toolchain Integration
 
-BoundaryX supports automated Linux building for Debian/Ubuntu (`.deb`) and standalone `AppImage`:
+BoundaryX interacts with external security utilities via manifest declarations in `config/tool-manifest.yaml`.
 
-```bash
-# Install Tauri Linux dependencies (Debian/Ubuntu)
-sudo apt-get update && sudo apt-get install -y \
-    libwebkit2gtk-4.1-dev build-essential curl wget file libssl-dev libayatana-appindicator3-dev librsvg2-dev
-
-# Run automated Linux packaging script
-./scripts/package_linux.sh
-```
-
----
-
-## 5. Security & Authorized Use Notice
-
-> [!IMPORTANT]
-> BoundaryX is engineered exclusively for **authorized web application penetration testing, security audits, and bug bounty programs**.
-> Entering an unauthorized target or attempting to bypass scope boundaries is strictly prohibited. The engine enforces scope restrictions before dispatching requests, rejecting unapproved hosts and out-of-scope HTTP redirects.
+- **No Silent Downloads:** BoundaryX will never silently fetch or execute third-party binaries. Users maintain complete custody over their security tools.
+- **Upstream Installations:**
+  - **Subfinder:** `go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest`
+  - **HTTPx:** `go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest`
+  - **dnsx:** `go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest`
+  - **Katana:** `go install -v github.com/projectdiscovery/katana/cmd/katana@latest`
+  - **Nuclei:** `go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest`
+  - **ffuf:** `go install github.com/ffuf/ffuf/v2@latest`
+- **Graceful Tool Absences:** When an external tool is not installed, BoundaryX flags its status as uninstalled in the Toolchain view, provides the official installation command, and disables jobs requiring that tool without crashing.
 
 ---
 
-## 6. License & SBOM
+## 8. Optional Gemini Analyst Setup
 
-BoundaryX is licensed under the [MIT License](LICENSE).
-Third-party component notices and CycloneDX SBOM are documented in [`docs/SBOM.json`](docs/SBOM.json).
+BoundaryX includes an optional AI-assisted hypothesis generation module powered by Google Gemini.
+
+1. **Separation of Services:** Consumer Gemini web subscriptions (Gemini Advanced) are distinct from the Google Gemini Developer API. An API key from [Google AI Studio](https://aistudio.google.com/) is required.
+2. **Secure Configuration:** Enter your API key in the Desktop application under **Settings → Gemini Analyst**. The key is stored in the local encrypted OS Keyring / Fernet vault. It is never persisted in SQLite or plain `.env` files.
+3. **No-AI Mode:** If no key is configured or offline mode is selected, BoundaryX operates deterministically using local policy evaluation with zero external network calls.
+
+---
+
+## 9. Data Handling & Privacy Model
+
+- **Local Storage:** All assessment artifacts, scope rules, and findings are stored locally in an encrypted SQLite database at `~/.boundaryx/boundaryx.db` (or platform equivalent).
+- **Outbound Network Traffic:**
+  - Core engine operations, recon parsing, and reports run entirely locally.
+  - Active reconnaissance jobs communicate only with authorized in-scope targets.
+  - No telemetries or tracking beacons are transmitted.
+- **AI Hand-off Safeguards:**
+  - Context is dispatched to the Gemini API **only** after explicit user confirmation in a dedicated review modal.
+  - `RedactionEngine` strips `Authorization` tokens, session cookies, passwords, and API keys before context leaves the host.
+  - Returned hypotheses are validated against stored evidence IDs; unverified citations are automatically discarded.
+
+---
+
+## 10. Authorized-Use Notice & Scope Safety
+
+> **IMPORTANT:** BoundaryX is designed exclusively for authorized penetration testing, bug bounty programs with documented scope, and academic security research.
+
+- The built-in `ScopeGuard` actively blocks targets outside authorized program definitions.
+- Users are solely responsible for ensuring they possess written authorization from system owners prior to initiating active scans or test evaluations.
+
+---
+
+## 11. Troubleshooting
+
+- **Engine IPC Connection Timeout:** Ensure Python 3.12+ is installed and present in your system `PATH`. Run `python -m boundaryx.cli --version` to verify engine responsiveness.
+- **SQLite Database Locked:** BoundaryX configures SQLite in WAL mode with a 5000ms busy timeout. Ensure the storage directory is on a local filesystem (not a network mount or cloud-synced folder).
+- **Redirect Scope Errors (`ScopeDenialError`):** If an HTTP test fails with a scope denial on redirect, inspect whether the target endpoint issues a 302 redirect to an external identity provider (e.g. Google/GitHub OAuth). Add the specific redirect host to your scope exclusions or update your testing flow.
+- **Frontend Build Issues:** Ensure Node.js 20+ is active. Delete `node_modules` and run `npm install` to restore packages from the committed `package-lock.json`.
+
+---
+
+## 12. Security Reporting & Contributing
+
+- **Security Advisories:** Review our vulnerability disclosure policy in [SECURITY.md](SECURITY.md). Please report vulnerabilities responsibly to security@boundaryx.dev (or via GitHub Private Vulnerability Reporting).
+- **Contributions:** Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for style guides, branch naming, and pull request procedures.
+- **License:** Licensed under the [MIT License](LICENSE).

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { CheckSquare, Play, ShieldAlert, Sparkles } from "lucide-react";
 import { Program } from "../services/ipc";
 
 interface TestPlannerPageProps {
@@ -22,7 +21,7 @@ export const TestPlannerPage: React.FC<TestPlannerPageProps> = ({ program }) => 
         <div>
           <h2 style={{ fontSize: "1.4rem", fontWeight: 700 }}>Authorization Test Planner</h2>
           <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>
-            Deterministic authorization invariants, cross-tenant matrices, and structured test hypotheses.
+            Deterministic authorization invariants, cross-tenant matrices, and structured test hypotheses{program ? ` for ${program.name}` : ""}.
           </p>
         </div>
         <div style={{ display: "flex", gap: "0.5rem" }}>

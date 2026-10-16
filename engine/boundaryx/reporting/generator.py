@@ -2,7 +2,7 @@ import csv
 import html
 import io
 import json
-from typing import Any, Dict, List
+from typing import Any, List
 
 from boundaryx.domain.models import Asset, Evidence, Finding, Program, utc_now_iso
 from boundaryx.security.redaction import RedactionEngine

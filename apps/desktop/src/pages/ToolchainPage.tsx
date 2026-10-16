@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Wrench, CheckCircle2, AlertCircle, Copy, ExternalLink, RefreshCw } from "lucide-react";
+import { Copy, ExternalLink, RefreshCw } from "lucide-react";
 import { ToolStatus, ipc } from "../services/ipc";
 
 export const ToolchainPage: React.FC = () => {

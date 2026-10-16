@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import List
 from urllib.parse import urlparse
 
 import yaml
@@ -70,8 +70,6 @@ class OpenAPIImporter:
 
             for method in ("get", "post", "put", "delete", "patch", "options", "head"):
                 if method in route_item:
-                    op = route_item[method]
-                    op_id = op.get("operationId", "")
                     target_repr = f"{base_host}{route}" if base_host else route
 
                     dec = scope_guard.evaluate(target_repr if "://" in target_repr else f"https://{target_repr}")

@@ -1,8 +1,8 @@
 import json
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import List
 
-from boundaryx.domain.enums import AssetType, ScopeStatus
+from boundaryx.domain.enums import AssetType
 from boundaryx.domain.models import Asset, HttpExchange, utc_now_iso
 from boundaryx.scope.guard import ScopeGuard
 from boundaryx.security.redaction import RedactionEngine

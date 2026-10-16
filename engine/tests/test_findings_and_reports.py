@@ -3,11 +3,11 @@ import tempfile
 
 import pytest
 
-from boundaryx.domain.enums import Confidence, FindingStatus, Severity
+from boundaryx.domain.enums import FindingStatus
 from boundaryx.domain.models import Finding, Program
 from boundaryx.findings.dedup import DuplicateDetector
 from boundaryx.findings.service import FindingService, FindingTransitionError
-from boundaryx.reporting.generator import ReportGenerator, escape_csv_cell
+from boundaryx.reporting.generator import ReportGenerator
 from boundaryx.storage.database import Database
 from boundaryx.storage.migrations import MigrationRunner
 from boundaryx.storage.repositories import FindingRepository, ProgramRepository

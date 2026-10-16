@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Play, XCircle, CheckCircle, AlertTriangle, Loader2 } from "lucide-react";
+import { Play, XCircle } from "lucide-react";
 import { Job, Program, ipc } from "../services/ipc";
 
 interface JobsPageProps {

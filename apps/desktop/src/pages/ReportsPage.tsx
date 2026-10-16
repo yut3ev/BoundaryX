@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Download, FileText, CheckCircle2, ShieldAlert } from "lucide-react";
+import { Download } from "lucide-react";
 import { Finding, Program, Asset } from "../services/ipc";
 
 interface ReportsPageProps {

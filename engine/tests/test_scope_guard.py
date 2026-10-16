@@ -1,4 +1,3 @@
-import pytest
 
 from boundaryx.domain.enums import MatcherType, ScopeRuleType, ScopeStatus
 from boundaryx.domain.models import ScopeRule

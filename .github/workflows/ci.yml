@@ -33,7 +33,7 @@ jobs:
 
       - name: Run Ruff Linter
         run: |
-          uv run ruff check engine/
+          uv run ruff check --config engine/pyproject.toml engine/
 
       - name: Run Pytest Test Suite
         run: |

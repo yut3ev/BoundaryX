@@ -72,11 +72,15 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
     setTestDecision(dec);
   };
 
+  const activeProgram = programs.find((p) => p.id === activeProgramId);
+
   return (
     <div className="page-body">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
         <div>
-          <h2 style={{ fontSize: "1.4rem", fontWeight: 700 }}>Program & Scope Management</h2>
+          <h2 style={{ fontSize: "1.4rem", fontWeight: 700 }}>
+            Program &amp; Scope Management {activeProgram ? `— ${activeProgram.name}` : ""}
+          </h2>
           <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>
             Define authorized target boundaries, explicit exclusions, and verified wildcards.
           </p>

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Globe, Plus, Filter, ArrowUpDown } from "lucide-react";
 import { Asset, Program } from "../services/ipc";
 
 interface AssetsPageProps {
@@ -22,7 +21,9 @@ export const AssetsPage: React.FC<AssetsPageProps> = ({ program, assets }) => {
     <div className="page-body">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
         <div>
-          <h2 style={{ fontSize: "1.4rem", fontWeight: 700 }}>Asset Inventory</h2>
+          <h2 style={{ fontSize: "1.4rem", fontWeight: 700 }}>
+            Asset Inventory {program ? `— ${program.name}` : ""}
+          </h2>
           <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>
             Discovered subdomains, web endpoints, API routes, and network services.
           </p>

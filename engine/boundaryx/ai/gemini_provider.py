@@ -49,8 +49,7 @@ class GeminiProvider(AIProvider):
             return False, "No Gemini API key configured. Application is in offline/no-AI mode."
         try:
             client = self._init_client()
-            # Simple ping generation
-            response = client.models.generate_content(
+            _response = client.models.generate_content(
                 model=self.model_id,
                 contents="Ping",
             )

@@ -8,7 +8,6 @@ from boundaryx.ipc.protocol import (
     MAX_PAYLOAD_BYTES,
     IPCError,
     parse_ipc_line,
-    serialize_ipc_response,
 )
 from boundaryx.storage.database import Database
 from boundaryx.storage.migrations import MigrationRunner

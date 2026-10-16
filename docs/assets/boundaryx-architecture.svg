@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 750" width="100%" height="100%" style="background-color: #0b0f19; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+  <defs>
+    <linearGradient id="gradHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+    <linearGradient id="gradCard" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#161e2e" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="gradAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <filter id="dropShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- Title & Header -->
+  <text x="550" y="45" text-anchor="middle" fill="#f8fafc" font-size="24" font-weight="700" letter-spacing="0.5">BoundaryX Architecture Overview</text>
+  <text x="550" y="70" text-anchor="middle" fill="#94a3b8" font-size="13">Desktop Security Research Workbench &amp; Authorized Scope Enforcement Engine</text>
+
+  <!-- LAYER 1: Frontend Desktop Shell -->
+  <g transform="translate(50, 95)" filter="url(#dropShadow)">
+    <rect width="1000" height="120" rx="10" fill="url(#gradCard)" stroke="#1e293b" stroke-width="1.5" />
+    <rect x="0" y="0" width="1000" height="34" rx="10" fill="#1e293b" />
+    <rect x="0" y="24" width="1000" height="10" fill="#1e293b" />
+    <circle cx="22" cy="17" r="5" fill="#ef4444" />
+    <circle cx="38" cy="17" r="5" fill="#f59e0b" />
+    <circle cx="54" cy="17" r="5" fill="#10b981" />
+    <text x="75" y="22" fill="#cbd5e1" font-size="12" font-weight="600">Frontend Presentation Shell — React 18 + TypeScript + Vite + Tauri v2</text>
+
+    <!-- Sub-boxes -->
+    <rect x="25" y="48" width="170" height="56" rx="6" fill="#0f172a" stroke="#334155" />
+    <text x="110" y="72" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="600">10 Functional Views</text>
+    <text x="110" y="90" text-anchor="middle" fill="#64748b" font-size="10">Overview, Scope, Jobs...</text>
+
+    <rect x="215" y="48" width="170" height="56" rx="6" fill="#0f172a" stroke="#334155" />
+    <text x="300" y="72" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="600">Active Job Tray</text>
+    <text x="300" y="90" text-anchor="middle" fill="#64748b" font-size="10">Real-time status &amp; cancel</text>
+
+    <rect x="405" y="48" width="180" height="56" rx="6" fill="#0f172a" stroke="#334155" />
+    <text x="495" y="72" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="600">Consent Modals</text>
+    <text x="495" y="90" text-anchor="middle" fill="#64748b" font-size="10">Explicit AI review gates</text>
+
+    <rect x="605" y="48" width="180" height="56" rx="6" fill="#0f172a" stroke="#334155" />
+    <text x="695" y="72" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="600">Evidence Vault UI</text>
+    <text x="695" y="90" text-anchor="middle" fill="#64748b" font-size="10">Raw captures &amp; hashes</text>
+
+    <rect x="805" y="48" width="170" height="56" rx="6" fill="#0f172a" stroke="#334155" />
+    <text x="890" y="72" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="600">Tauri v2 Core Host</text>
+    <text x="890" y="90" text-anchor="middle" fill="#64748b" font-size="10">Native window &amp; process</text>
+  </g>
+
+  <!-- CONNECTOR 1: NDJSON IPC -->
+  <g transform="translate(50, 225)">
+    <line x1="500" y1="0" x2="500" y2="45" stroke="#3b82f6" stroke-width="2.5" stroke-dasharray="6,4" />
+    <polygon points="500,45 495,35 505,35" fill="#3b82f6" />
+    <rect x="360" y="8" width="280" height="28" rx="14" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5" />
+    <text x="500" y="26" text-anchor="middle" fill="#93c5fd" font-size="11" font-weight="600">NDJSON IPC Protocol (Stdio / 10MB frames / Allowlist)</text>
+  </g>
+
+  <!-- LAYER 2: Python Engine Core -->
+  <g transform="translate(50, 275)" filter="url(#dropShadow)">
+    <rect width="1000" height="370" rx="10" fill="url(#gradCard)" stroke="#1e293b" stroke-width="1.5" />
+    <rect x="0" y="0" width="1000" height="34" rx="10" fill="#1e293b" />
+    <rect x="0" y="24" width="1000" height="10" fill="#1e293b" />
+    <text x="25" y="22" fill="#cbd5e1" font-size="12" font-weight="600">Backend Core Engine (Python 3.12+ Sidecar / CLI Dispatcher)</text>
+
+    <!-- Engine Modules Grid -->
+    <!-- Module 1: Scope Guard -->
+    <g transform="translate(25, 48)">
+      <rect width="300" height="135" rx="8" fill="#0f172a" stroke="#10b981" stroke-width="1.2" />
+      <text x="15" y="26" fill="#34d399" font-size="13" font-weight="700">Scope Guard &amp; Boundaries</text>
+      <text x="15" y="48" fill="#94a3b8" font-size="11">• Strict IDNA / Punycode Normalization</text>
+      <text x="15" y="66" fill="#94a3b8" font-size="11">• Userinfo / Credential (@) Rejection</text>
+      <text x="15" y="84" fill="#94a3b8" font-size="11">• Suffix / Prefix Deceptive Spoof Defense</text>
+      <text x="15" y="102" fill="#94a3b8" font-size="11">• Hop-by-Hop Redirect Chain Validation</text>
+      <text x="15" y="120" fill="#94a3b8" font-size="11">• Exclusion Rules Precedence &amp; CIDR/IP</text>
+    </g>
+
+    <!-- Module 2: Job Orchestration -->
+    <g transform="translate(350, 48)">
+      <rect width="300" height="135" rx="8" fill="#0f172a" stroke="#3b82f6" stroke-width="1.2" />
+      <text x="15" y="26" fill="#60a5fa" font-size="13" font-weight="700">Jobs &amp; Process Supervisor</text>
+      <text x="15" y="48" fill="#94a3b8" font-size="11">• Token-Bucket Rate Limiter (Safety RPS)</text>
+      <text x="15" y="66" fill="#94a3b8" font-size="11">• Strict Argv Arrays (No Shell Injection)</text>
+      <text x="15" y="84" fill="#94a3b8" font-size="11">• Clean Env (Scrubbed API Keys &amp; Tokens)</text>
+      <text x="15" y="102" fill="#94a3b8" font-size="11">• OS Process Group Kill Tree on Cancel</text>
+      <text x="15" y="120" fill="#94a3b8" font-size="11">• State Machine &amp; Crash Recovery</text>
+    </g>
+
+    <!-- Module 3: Toolchain Adapters -->
+    <g transform="translate(675, 48)">
+      <rect width="300" height="135" rx="8" fill="#0f172a" stroke="#8b5cf6" stroke-width="1.2" />
+      <text x="15" y="26" fill="#a78bfa" font-size="13" font-weight="700">Toolchain &amp; Adapters</text>
+      <text x="15" y="48" fill="#94a3b8" font-size="11">• Manifest-Driven Registry (YAML)</text>
+      <text x="15" y="66" fill="#94a3b8" font-size="11">• Subfinder &amp; HTTPx Integration</text>
+      <text x="15" y="84" fill="#94a3b8" font-size="11">• Zero Silent Downloads (User-Managed)</text>
+      <text x="15" y="102" fill="#94a3b8" font-size="11">• Binary Detection &amp; Version Probing</text>
+      <text x="15" y="120" fill="#94a3b8" font-size="11">• Structured Stdout/JSON Streaming</text>
+    </g>
+
+    <!-- Module 4: Security & Redaction -->
+    <g transform="translate(25, 200)">
+      <rect width="300" height="145" rx="8" fill="#0f172a" stroke="#f59e0b" stroke-width="1.2" />
+      <text x="15" y="26" fill="#fbbf24" font-size="13" font-weight="700">Security &amp; Secret Vault</text>
+      <text x="15" y="48" fill="#94a3b8" font-size="11">• Multi-Vector Redaction Engine</text>
+      <text x="15" y="66" fill="#94a3b8" font-size="11">• Header / Cookie / JWT Token Scrubbing</text>
+      <text x="15" y="84" fill="#94a3b8" font-size="11">• Fernet Encrypted Vault + OS Keyring</text>
+      <text x="15" y="102" fill="#94a3b8" font-size="11">• Zero Plaintext Keys in DB or Logs</text>
+      <text x="15" y="120" fill="#94a3b8" font-size="11">• Path Sanitization &amp; Traversal Defense</text>
+      <text x="15" y="136" fill="#94a3b8" font-size="10" font-style="italic">Logs strictly diverted to stderr</text>
+    </g>
+
+    <!-- Module 5: Storage & Persistence -->
+    <g transform="translate(350, 200)">
+      <rect width="300" height="145" rx="8" fill="#0f172a" stroke="#06b6d4" stroke-width="1.2" />
+      <text x="15" y="26" fill="#22d3ee" font-size="13" font-weight="700">Storage &amp; Data Pipeline</text>
+      <text x="15" y="48" fill="#94a3b8" font-size="11">• SQLite with WAL Mode &amp; Busy Timeout</text>
+      <text x="15" y="66" fill="#94a3b8" font-size="11">• PRAGMA foreign_keys = ON</text>
+      <text x="15" y="84" fill="#94a3b8" font-size="11">• Versioned SQL Schema Migrations</text>
+      <text x="15" y="102" fill="#94a3b8" font-size="11">• HAR 1.2 &amp; OpenAPI Safe YAML Import</text>
+      <text x="15" y="120" fill="#94a3b8" font-size="11">• SHA-256 Evidence Integrity Hashes</text>
+      <text x="15" y="136" fill="#94a3b8" font-size="10" font-style="italic">Asset Diff: Added, Changed, Stale</text>
+    </g>
+
+    <!-- Module 6: Gemini Analyst & Findings -->
+    <g transform="translate(675, 200)">
+      <rect width="300" height="145" rx="8" fill="#0f172a" stroke="#ec4899" stroke-width="1.2" />
+      <text x="15" y="26" fill="#f472b6" font-size="13" font-weight="700">Findings &amp; Optional Gemini</text>
+      <text x="15" y="48" fill="#94a3b8" font-size="11">• Mandatory Human Review for Verified State</text>
+      <text x="15" y="66" fill="#94a3b8" font-size="11">• Official google-genai SDK (v2.0+)</text>
+      <text x="15" y="84" fill="#94a3b8" font-size="11">• Explicit User Consent &amp; Redacted Preview</text>
+      <text x="15" y="102" fill="#94a3b8" font-size="11">• Citation Validator (Strips Hallucinations)</text>
+      <text x="15" y="120" fill="#94a3b8" font-size="11">• Offline / No-AI Fallback Provider</text>
+      <text x="15" y="136" fill="#94a3b8" font-size="10" font-style="italic">Untrusted Target Data Isolation Boundary</text>
+    </g>
+  </g>
+
+  <!-- LAYER 3: Output & Artifacts -->
+  <g transform="translate(50, 660)" filter="url(#dropShadow)">
+    <rect width="1000" height="65" rx="8" fill="#111827" stroke="#1e293b" />
+    <text x="25" y="38" fill="#cbd5e1" font-size="12" font-weight="600">Export &amp; Deliverables:</text>
+    <rect x="180" y="18" width="180" height="30" rx="4" fill="#1e293b" />
+    <text x="270" y="38" text-anchor="middle" fill="#e2e8f0" font-size="11">Standalone HTML (XSS-Safe)</text>
+    <rect x="380" y="18" width="180" height="30" rx="4" fill="#1e293b" />
+    <text x="470" y="38" text-anchor="middle" fill="#e2e8f0" font-size="11">Auditor-Ready Markdown</text>
+    <rect x="580" y="18" width="190" height="30" rx="4" fill="#1e293b" />
+    <text x="675" y="38" text-anchor="middle" fill="#e2e8f0" font-size="11">CSV (Formula Injection Defense)</text>
+    <rect x="790" y="18" width="180" height="30" rx="4" fill="#1e293b" />
+    <text x="880" y="38" text-anchor="middle" fill="#e2e8f0" font-size="11">Sanitized JSON Export</text>
+  </g>
+</svg>

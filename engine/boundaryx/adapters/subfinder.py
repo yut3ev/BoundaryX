@@ -1,6 +1,6 @@
 import json
 import re
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List
 
 from boundaryx.adapters.base import ToolAdapter
 

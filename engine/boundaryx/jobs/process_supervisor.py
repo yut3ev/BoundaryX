@@ -89,11 +89,6 @@ class ProcessSupervisor:
         except Exception as e:
             raise ProcessExecutionError(f"Failed to spawn process {argv[0]}: {str(e)}") from e
 
-        stdout_chunks: List[str] = []
-        stderr_chunks: List[str] = []
-        stdout_bytes = 0
-        stderr_bytes = 0
-
         start_time = time.time()
 
         def kill_process_tree():
@@ -113,7 +108,7 @@ class ProcessSupervisor:
             if cancel_event and cancel_event.is_set():
                 logger.info("Cancellation requested, terminating process %d...", proc.pid)
                 kill_process_tree()
-                return -1, "".join(stdout_chunks), "Process cancelled by user"
+                return -1, "", "Process cancelled by user"
 
             # Check timeout
             if time.time() - start_time > timeout_seconds:

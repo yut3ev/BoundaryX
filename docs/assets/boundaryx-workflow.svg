@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 240" width="100%" height="100%" style="background-color: #0b0f19; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+  <defs>
+    <linearGradient id="wfGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <filter id="wfShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <text x="500" y="32" text-anchor="middle" fill="#f8fafc" font-size="16" font-weight="700">BoundaryX Research &amp; Assessment Workflow</text>
+  <text x="500" y="52" text-anchor="middle" fill="#94a3b8" font-size="11">Sequential boundary-enforced lifecycle from authorized scope definition to verified reporting</text>
+
+  <!-- Step 1: Program & Scope -->
+  <g transform="translate(30, 80)" filter="url(#wfShadow)">
+    <rect width="165" height="120" rx="8" fill="#161e2e" stroke="#10b981" stroke-width="1.5" />
+    <circle cx="28" cy="28" r="14" fill="#064e3b" />
+    <text x="28" y="33" text-anchor="middle" fill="#34d399" font-size="12" font-weight="700">1</text>
+    <text x="52" y="32" fill="#e2e8f0" font-size="12" font-weight="700">Program &amp; Scope</text>
+    <text x="14" y="62" fill="#94a3b8" font-size="10">• Inclusions &amp; Exclusions</text>
+    <text x="14" y="78" fill="#94a3b8" font-size="10">• IDNA / Punycode</text>
+    <text x="14" y="94" fill="#94a3b8" font-size="10">• Zero-tolerance bypass</text>
+    <text x="14" y="110" fill="#34d399" font-size="9" font-weight="600">Strict Boundary Rules</text>
+  </g>
+
+  <!-- Arrow 1 -> 2 -->
+  <line x1="205" y1="140" x2="225" y2="140" stroke="#3b82f6" stroke-width="2" />
+  <polygon points="225,140 218,136 218,144" fill="#3b82f6" />
+
+  <!-- Step 2: Recon & Imports -->
+  <g transform="translate(230, 80)" filter="url(#wfShadow)">
+    <rect width="165" height="120" rx="8" fill="#161e2e" stroke="#3b82f6" stroke-width="1.5" />
+    <circle cx="28" cy="28" r="14" fill="#1e3a8a" />
+    <text x="28" y="33" text-anchor="middle" fill="#60a5fa" font-size="12" font-weight="700">2</text>
+    <text x="52" y="32" fill="#e2e8f0" font-size="12" font-weight="700">Discovery &amp; Import</text>
+    <text x="14" y="62" fill="#94a3b8" font-size="10">• Subfinder / HTTPx</text>
+    <text x="14" y="78" fill="#94a3b8" font-size="10">• HAR 1.2 / OpenAPI</text>
+    <text x="14" y="94" fill="#94a3b8" font-size="10">• Rate-limited execution</text>
+    <text x="14" y="110" fill="#60a5fa" font-size="9" font-weight="600">Assets Diff Tracking</text>
+  </g>
+
+  <!-- Arrow 2 -> 3 -->
+  <line x1="405" y1="140" x2="425" y2="140" stroke="#8b5cf6" stroke-width="2" />
+  <polygon points="425,140 418,136 418,144" fill="#8b5cf6" />
+
+  <!-- Step 3: Analysis & Test Lab -->
+  <g transform="translate(430, 80)" filter="url(#wfShadow)">
+    <rect width="165" height="120" rx="8" fill="#161e2e" stroke="#8b5cf6" stroke-width="1.5" />
+    <circle cx="28" cy="28" r="14" fill="#4c1d95" />
+    <text x="28" y="33" text-anchor="middle" fill="#a78bfa" font-size="12" font-weight="700">3</text>
+    <text x="52" y="32" fill="#e2e8f0" font-size="12" font-weight="700">Analysis Lab</text>
+    <text x="14" y="62" fill="#94a3b8" font-size="10">• Authorization Matrix</text>
+    <text x="14" y="78" fill="#94a3b8" font-size="10">• Hardened HTTP Client</text>
+    <text x="14" y="94" fill="#94a3b8" font-size="10">• Redirect-hop checking</text>
+    <text x="14" y="110" fill="#a78bfa" font-size="9" font-weight="600">Manual / Supervised</text>
+  </g>
+
+  <!-- Arrow 3 -> 4 -->
+  <line x1="605" y1="140" x2="625" y2="140" stroke="#ec4899" stroke-width="2" />
+  <polygon points="625,140 618,136 618,144" fill="#ec4899" />
+
+  <!-- Step 4: Optional Gemini -->
+  <g transform="translate(630, 80)" filter="url(#wfShadow)">
+    <rect width="165" height="120" rx="8" fill="#161e2e" stroke="#ec4899" stroke-width="1.5" />
+    <circle cx="28" cy="28" r="14" fill="#831843" />
+    <text x="28" y="33" text-anchor="middle" fill="#f472b6" font-size="12" font-weight="700">4</text>
+    <text x="52" y="32" fill="#e2e8f0" font-size="12" font-weight="700">Optional AI Assist</text>
+    <text x="14" y="62" fill="#94a3b8" font-size="10">• Explicit user consent</text>
+    <text x="14" y="78" fill="#94a3b8" font-size="10">• Redacted preview</text>
+    <text x="14" y="94" fill="#94a3b8" font-size="10">• Hallucination filter</text>
+    <text x="14" y="110" fill="#f472b6" font-size="9" font-weight="600">Candidate Hypotheses</text>
+  </g>
+
+  <!-- Arrow 4 -> 5 -->
+  <line x1="805" y1="140" x2="825" y2="140" stroke="#f59e0b" stroke-width="2" />
+  <polygon points="825,140 818,136 818,144" fill="#f59e0b" />
+
+  <!-- Step 5: Evidence & Report -->
+  <g transform="translate(830, 80)" filter="url(#wfShadow)">
+    <rect width="145" height="120" rx="8" fill="#161e2e" stroke="#f59e0b" stroke-width="1.5" />
+    <circle cx="28" cy="28" r="14" fill="#78350f" />
+    <text x="28" y="33" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">5</text>
+    <text x="52" y="32" fill="#e2e8f0" font-size="12" font-weight="700">Evidence &amp; Report</text>
+    <text x="14" y="62" fill="#94a3b8" font-size="10">• Mandatory Review</text>
+    <text x="14" y="78" fill="#94a3b8" font-size="10">• Linked Evidence</text>
+    <text x="14" y="94" fill="#94a3b8" font-size="10">• HTML / MD / CSV</text>
+    <text x="14" y="110" fill="#fbbf24" font-size="9" font-weight="600">Verified Deliverables</text>
+  </g>
+</svg>

@@ -15,7 +15,6 @@ from boundaryx.domain.models import (
     Asset,
     AssetObservation,
     AuditEvent,
-    Evidence,
     Finding,
     Job,
     JobEvent,
