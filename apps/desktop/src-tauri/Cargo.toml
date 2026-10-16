@@ -1,6 +1,6 @@
 [package]
 name = "boundaryx-desktop"
-version = "0.1.0"
+version = "0.1.1"
 description = "BoundaryX Security Research Desktop Workbench"
 authors = ["BoundaryX Contributors"]
 edition = "2021"

@@ -12,7 +12,7 @@ def test_app_settings_defaults() -> None:
     """Test default values for AppSettings."""
     settings = AppSettings()
     assert settings.app_name == "BoundaryX"
-    assert settings.version == "0.1.0"
+    assert settings.version == "0.1.1"
     assert settings.log_level == "INFO"
     assert settings.theme == "dark"
     assert settings.font_scale == 1.0

@@ -65,7 +65,7 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
             Security Assessment Report: {program ? program.name : "Acme Bug Bounty"}
           </h3>
           <p style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
-            Generated: {new Date().toUTCString()} | Platform: BoundaryX v0.1.0
+            Generated: {new Date().toUTCString()} | Platform: BoundaryX v0.1.1
           </p>
         </div>
 

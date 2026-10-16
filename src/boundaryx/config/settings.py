@@ -33,7 +33,7 @@ class AppSettings(BaseSettings):
 
     # Application metadata
     app_name: str = Field(default="BoundaryX", description="Application display name")
-    version: str = Field(default="0.1.0", description="Application version")
+    version: str = Field(default="0.1.1", description="Application version")
 
     # Storage and file paths
     db_path: Path = Field(

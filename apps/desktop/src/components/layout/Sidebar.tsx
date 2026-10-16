@@ -103,7 +103,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Footer Info */}
       <div style={{ padding: "0.75rem 1.5rem", borderTop: "1px solid var(--border)", fontSize: "0.75rem", color: "var(--text-muted)" }}>
-        <span>v0.1.0 (No-AI Default)</span>
+        <span>v0.1.1 (No-AI Default)</span>
       </div>
     </aside>
   );

@@ -132,7 +132,7 @@ def main() -> None:
     if args.ipc:
         run_ipc_loop(dispatcher)
     else:
-        print("BoundaryX Engine v0.1.0 ready. Use --ipc for sidecar mode or --help for options.")
+        print("BoundaryX Engine v0.1.1 ready. Use --ipc for sidecar mode or --help for options.")
 
 
 if __name__ == "__main__":

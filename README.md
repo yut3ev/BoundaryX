@@ -43,8 +43,10 @@ An Arabic quick-start guide is available at [docs/QUICKSTART_AR.md](docs/QUICKST
 
 - **Development Status:** Stable Initial Release ([v0.1.1](https://github.com/yut3ev/BoundaryX/releases/tag/v0.1.1)).
 - **Verified Host Platforms:**
-  - Ubuntu 22.04 / 24.04 LTS x86_64: Native `.deb` (42.50 MB) and `.AppImage` (117.51 MB) installer bundles compiled and verified via GitHub Actions release pipeline.
-  - Windows 11 x86_64: Native standalone sidecar packaging verified with PyInstaller.
+  - **Linux (Ubuntu 22.04 / 24.04 LTS x86_64):** Verified native `.deb` (42.50 MB) and standalone `.AppImage` (117.51 MB) installer packages built and verified in automated CI release pipeline.
+    > [!NOTE]
+    > **Distribution Compatibility:** Automated package generation confirms packaging integrity in clean pipeline environments. However, building packages does not guarantee identical installation across every Linux distribution; specific desktop environments may require runtime dependencies (such as `libwebkit2gtk-4.1-0`) or standard graphics stack packages.
+  - **Windows 11 x86_64:** Sidecar engine packaging and local IPC execution verified.
 - **Verified Test Suite:**
   - 43 Python Engine unit and integration tests (0 failures).
   - 169 Domain security, redaction, and scope tests (0 failures).
@@ -52,10 +54,10 @@ An Arabic quick-start guide is available at [docs/QUICKSTART_AR.md](docs/QUICKST
 - **Official Release Artifacts ([v0.1.1](https://github.com/yut3ev/BoundaryX/releases/tag/v0.1.1)):**
   - `BoundaryX_0.1.0_amd64.deb` (`44,565,734 bytes`, SHA-256: `dc4d9f1fca2e2a4c9775abf10c0516bcdf47bb9a21dba814ee95ad63ab05f058`)
   - `BoundaryX_0.1.0_amd64.AppImage` (`123,218,424 bytes`, SHA-256: `4205bd82387cf8fb17ee76fecc19d3e08f5d1ac64e5852c20643956ccfc5843c`)
-  - `SBOM.json` (`66,867 bytes`, CycloneDX 1.5, 404 components, SHA-256: `64a62b1ab2885c5bbf557ee879ee7801560ac5fe18e62a700ce9db67dbc4e9fe`)
-  - `SHA256SUMS.txt` (cryptographically validated)
-- **Experimental / Pending Paths:**
-  - macOS builds are structurally supported by Tauri v2 but pending formal code signing on physical Apple silicon hardware.
+  - `SBOM.json` (CycloneDX 1.5, exact locked dependency versions, SHA-256 cryptographically verified)
+  - `SHA256SUMS.txt` (package checksums)
+- **Pending / Roadmap Platforms:**
+  - macOS builds are structurally supported by Tauri v2 but pending formal Apple Silicon code signing.
 
 ---
 
@@ -116,8 +118,25 @@ python -m boundaryx.cli --ipc
 
 ---
 
-## 6. Linux Packaging & Distribution
+## 6. Linux Packaging & Installation
 
+### Installing from Published Release
+Download the verified `.deb` package from the [v0.1.1 Release](https://github.com/yut3ev/BoundaryX/releases/tag/v0.1.1):
+
+```bash
+# 1. Verify SHA-256 checksum before installation
+sha256sum BoundaryX_0.1.0_amd64.deb
+# Expected: dc4d9f1fca2e2a4c9775abf10c0516bcdf47bb9a21dba814ee95ad63ab05f058
+
+# 2. Install package and required runtime dependencies
+sudo apt-get update
+sudo apt install -y ./BoundaryX_0.1.0_amd64.deb
+
+# 3. Launch BoundaryX
+boundaryx-desktop
+```
+
+### Local Packaging Recipes
 The repository provides automated recipes for standalone binary packaging:
 
 ```bash
@@ -128,7 +147,7 @@ python scripts/build_engine.py
 bash scripts/package_linux.sh
 ```
 
-*Note:* Linux desktop binary compilation requires the following system packages:
+*Note:* Compiling the desktop binary from source requires:
 ```bash
 sudo apt-get update && sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
 ```

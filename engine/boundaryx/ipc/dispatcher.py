@@ -110,7 +110,7 @@ class CommandDispatcher:
 
     # Core Handlers
     def _cmd_ping(self, payload: Dict[str, Any]) -> Dict[str, Any]:
-        return {"pong": True, "engine": "boundaryx", "version": "0.1.0"}
+        return {"pong": True, "engine": "boundaryx", "version": "0.1.1"}
 
     def _cmd_tools_registry(self, payload: Dict[str, Any]) -> List[Dict[str, Any]]:
         manifest_path = Path(__file__).resolve().parent.parent.parent.parent / "config" / "tool-manifest.yaml"

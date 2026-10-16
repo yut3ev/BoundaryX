@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "boundaryx-engine"
-version = "0.1.0"
+version = "0.1.1"
 description = "BoundaryX Security Engine: Recon, Scope Enforcement, Authorization Testing & Evidence Vault"
 readme = "README.md"
 license = {text = "MIT"}

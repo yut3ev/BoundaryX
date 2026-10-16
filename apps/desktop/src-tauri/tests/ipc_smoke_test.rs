@@ -43,6 +43,11 @@ async fn test_desktop_ipc_to_engine_sidecar_smoke() {
         Some("boundaryx"),
         "Engine name should be boundaryx"
     );
+    assert_eq!(
+        ping_res.get("version").and_then(|v| v.as_str()),
+        Some("0.1.1"),
+        "Engine version should be 0.1.1"
+    );
     eprintln!("[smoke test] Ping response validated: {:?}", ping_res);
 
     // 4. Test tools.registry command

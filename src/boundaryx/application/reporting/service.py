@@ -37,7 +37,7 @@ from boundaryx.security.redaction import RedactionEngine
 logger = logging.getLogger(__name__)
 
 TOOL_NAME = "BoundaryX"
-TOOL_VERSION = "0.1.0"
+TOOL_VERSION = "0.1.1"
 
 
 def _utc_now() -> datetime:

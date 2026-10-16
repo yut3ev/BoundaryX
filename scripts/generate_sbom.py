@@ -21,12 +21,74 @@ def calculate_sha256(filepath: Path) -> str:
     return h.hexdigest()
 
 
+try:
+    import tomllib
+except ImportError:
+    try:
+        import tomli as tomllib
+    except ImportError:
+        tomllib = None
+
+
+def get_project_version(project_root: Path) -> str:
+    desktop_pkg = project_root / "apps" / "desktop" / "package.json"
+    if desktop_pkg.exists():
+        try:
+            data = json.loads(desktop_pkg.read_text(encoding="utf-8"))
+            if "version" in data:
+                return str(data["version"])
+        except Exception:
+            pass
+    return "0.1.1"
+
+
 def extract_python_dependencies(engine_dir: Path) -> list:
     components = []
+    # 1. Prefer engine/uv.lock for exact resolved versions
+    uv_lock = engine_dir / "uv.lock"
+    if uv_lock.exists():
+        if tomllib:
+            try:
+                data = tomllib.loads(uv_lock.read_text(encoding="utf-8"))
+                for pkg in data.get("package", []):
+                    name = pkg.get("name")
+                    ver = pkg.get("version")
+                    if name and name != "boundaryx-engine":
+                        components.append({
+                            "name": name,
+                            "version": str(ver),
+                            "type": "library",
+                            "purl": f"pkg:pypi/{name}@{ver}",
+                            "language": "python",
+                        })
+                if components:
+                    return components
+            except Exception as e:
+                print(f"[!] Warning parsing uv.lock: {e}")
+        else:
+            current_name = None
+            for line in uv_lock.read_text(encoding="utf-8").splitlines():
+                line = line.strip()
+                if line.startswith("name = "):
+                    current_name = line.split('"')[1]
+                elif line.startswith("version = ") and current_name:
+                    ver = line.split('"')[1]
+                    if current_name != "boundaryx-engine":
+                        components.append({
+                            "name": current_name,
+                            "version": ver,
+                            "type": "library",
+                            "purl": f"pkg:pypi/{current_name}@{ver}",
+                            "language": "python",
+                        })
+                    current_name = None
+            if components:
+                return components
+
+    # 2. Fallback to pyproject.toml
     pyproject_file = engine_dir / "pyproject.toml"
     if pyproject_file.exists():
         content = pyproject_file.read_text(encoding="utf-8")
-        # Match dependencies in pyproject
         in_deps = False
         for line in content.splitlines():
             line = line.strip()
@@ -52,6 +114,41 @@ def extract_python_dependencies(engine_dir: Path) -> list:
 
 def extract_npm_dependencies(desktop_dir: Path) -> list:
     components = []
+    # 1. Prefer package-lock.json for exact resolved versions
+    pkg_lock = desktop_dir / "package-lock.json"
+    if pkg_lock.exists():
+        try:
+            data = json.loads(pkg_lock.read_text(encoding="utf-8"))
+            packages = data.get("packages", {})
+            seen_npm = set()
+            for pkg_path, meta in packages.items():
+                if not pkg_path or "node_modules/" not in pkg_path:
+                    continue
+                name = pkg_path.split("node_modules/")[-1]
+                ver = meta.get("version")
+                if not name or not ver:
+                    continue
+                key = f"{name}@{ver}"
+                if key in seen_npm:
+                    continue
+                seen_npm.add(key)
+                comp = {
+                    "name": name,
+                    "version": str(ver),
+                    "type": "library",
+                    "purl": f"pkg:npm/{name}@{ver}",
+                    "language": "javascript",
+                }
+                license_id = meta.get("license")
+                if license_id:
+                    comp["licenses"] = [{"license": {"id": license_id}}]
+                components.append(comp)
+            if components:
+                return components
+        except Exception as e:
+            print(f"[!] Warning parsing package-lock.json: {e}")
+
+    # 2. Fallback to package.json
     pkg_json = desktop_dir / "package.json"
     if pkg_json.exists():
         data = json.loads(pkg_json.read_text(encoding="utf-8"))
@@ -71,21 +168,50 @@ def extract_cargo_dependencies(tauri_dir: Path) -> list:
     components = []
     cargo_lock = tauri_dir / "Cargo.lock"
     if cargo_lock.exists():
+        if tomllib:
+            try:
+                data = tomllib.loads(cargo_lock.read_text(encoding="utf-8"))
+                seen_cargo = set()
+                for pkg in data.get("package", []):
+                    name = pkg.get("name")
+                    ver = pkg.get("version")
+                    if name and name != "boundaryx-desktop":
+                        key = f"{name}@{ver}"
+                        if key not in seen_cargo:
+                            seen_cargo.add(key)
+                            components.append({
+                                "name": name,
+                                "version": str(ver),
+                                "type": "library",
+                                "purl": f"pkg:cargo/{name}@{ver}",
+                                "language": "rust",
+                            })
+                if components:
+                    return components
+            except Exception as e:
+                print(f"[!] Warning parsing Cargo.lock with tomllib: {e}")
+
+        # Fallback line-based parsing
         content = cargo_lock.read_text(encoding="utf-8")
         current_name = None
+        seen_cargo = set()
         for line in content.splitlines():
             line = line.strip()
             if line.startswith("name = "):
                 current_name = line.split('"')[1]
             elif line.startswith("version = ") and current_name:
                 ver = line.split('"')[1]
-                components.append({
-                    "name": current_name,
-                    "version": ver,
-                    "type": "library",
-                    "purl": f"pkg:cargo/{current_name}@{ver}",
-                    "language": "rust",
-                })
+                if current_name != "boundaryx-desktop":
+                    key = f"{current_name}@{ver}"
+                    if key not in seen_cargo:
+                        seen_cargo.add(key)
+                        components.append({
+                            "name": current_name,
+                            "version": ver,
+                            "type": "library",
+                            "purl": f"pkg:cargo/{current_name}@{ver}",
+                            "language": "rust",
+                        })
                 current_name = None
     return components
 
@@ -101,6 +227,7 @@ def generate_sbom(output_path: Path | None = None) -> Path:
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
+    proj_version = get_project_version(project_root)
     py_comps = extract_python_dependencies(engine_dir)
     npm_comps = extract_npm_dependencies(desktop_dir)
     cargo_comps = extract_cargo_dependencies(tauri_dir)
@@ -108,23 +235,23 @@ def generate_sbom(output_path: Path | None = None) -> Path:
     all_components = [
         {
             "name": "boundaryx-engine",
-            "version": "0.1.0",
+            "version": proj_version,
             "type": "application",
             "licenses": [{"license": {"id": "MIT"}}],
             "description": "BoundaryX Security Engine Sidecar",
         },
         {
             "name": "boundaryx-desktop",
-            "version": "0.1.0",
+            "version": proj_version,
             "type": "application",
             "licenses": [{"license": {"id": "MIT"}}],
             "description": "BoundaryX Desktop UI & Tauri Supervisor",
         },
     ]
 
-    seen = {"boundaryx-engine", "boundaryx-desktop"}
+    seen = {f"app:boundaryx-engine@{proj_version}", f"app:boundaryx-desktop@{proj_version}"}
     for comp in py_comps + npm_comps + cargo_comps:
-        key = f"{comp['language']}:{comp['name']}"
+        key = f"{comp['language']}:{comp['name']}@{comp['version']}"
         if key not in seen:
             seen.add(key)
             all_components.append(comp)
@@ -132,12 +259,12 @@ def generate_sbom(output_path: Path | None = None) -> Path:
     sbom = {
         "bomFormat": "CycloneDX",
         "specVersion": "1.5",
-        "serialNumber": "urn:uuid:boundaryx-0.1.0-sbom",
+        "serialNumber": f"urn:uuid:boundaryx-{proj_version}-sbom",
         "version": 1,
         "metadata": {
             "component": {
                 "name": "boundaryx",
-                "version": "0.1.0",
+                "version": proj_version,
                 "type": "application",
                 "licenses": [{"license": {"id": "MIT"}}],
                 "description": "Desktop Security Research Workbench for Pentesting & Bug Bounty",
