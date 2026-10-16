@@ -30,11 +30,11 @@ jobs:
 
       - name: Run Ruff Linter
         run: |
-          uv run --project engine ruff check --config engine/pyproject.toml engine/
+          uv run --project engine --extra dev ruff check --config engine/pyproject.toml engine/
 
       - name: Run Pytest Test Suite
         run: |
-          uv run --project engine pytest engine/tests -v
+          uv run --project engine --extra dev pytest engine/tests -v
 
   frontend-check:
     name: Desktop Frontend Build & Lint
