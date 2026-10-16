@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+"""
+BoundaryX SBOM & License Inventory Generator
+Generates a JSON Software Bill of Materials (SBOM) and third-party notices.
+"""
+
+import json
+from pathlib import Path
+import sys
+
+
+def generate_sbom():
+    project_root = Path(__file__).resolve().parent.parent
+
+    sbom = {
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.5",
+        "serialNumber": "urn:uuid:boundaryx-0.1.0-sbom",
+        "version": 1,
+        "metadata": {
+            "component": {
+                "name": "boundaryx",
+                "version": "0.1.0",
+                "type": "application",
+                "licenses": [{"license": {"id": "MIT"}}],
+                "description": "Desktop Security Research Workbench for Pentesting & Bug Bounty",
+            }
+        },
+        "components": [
+            {
+                "name": "tauri",
+                "version": "2.0.0",
+                "type": "framework",
+                "licenses": [{"license": {"id": "MIT"}}],
+            },
+            {
+                "name": "google-genai",
+                "version": "2.31.0",
+                "type": "library",
+                "licenses": [{"license": {"id": "Apache-2.0"}}],
+            },
+            {
+                "name": "pydantic",
+                "version": "2.13.4",
+                "type": "library",
+                "licenses": [{"license": {"id": "MIT"}}],
+            },
+            {
+                "name": "httpx",
+                "version": "0.28.1",
+                "type": "library",
+                "licenses": [{"license": {"id": "BSD-3-Clause"}}],
+            },
+            {
+                "name": "cryptography",
+                "version": "46.0.7",
+                "type": "library",
+                "licenses": [{"license": {"id": "Apache-2.0"}}],
+            },
+            {
+                "name": "idna",
+                "version": "3.11",
+                "type": "library",
+                "licenses": [{"license": {"id": "BSD-3-Clause"}}],
+            },
+            {
+                "name": "pyyaml",
+                "version": "6.0.3",
+                "type": "library",
+                "licenses": [{"license": {"id": "MIT"}}],
+            },
+            {
+                "name": "react",
+                "version": "18.3.1",
+                "type": "library",
+                "licenses": [{"license": {"id": "MIT"}}],
+            },
+        ],
+    }
+
+    output_file = project_root / "docs" / "SBOM.json"
+    output_file.write_text(json.dumps(sbom, indent=2), encoding="utf-8")
+    print(f"[+] SBOM generated at {output_file}")
+
+
+if __name__ == "__main__":
+    generate_sbom()

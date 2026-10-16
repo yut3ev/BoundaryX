@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=75.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "boundaryx-engine"
+version = "0.1.0"
+description = "BoundaryX Security Engine: Recon, Scope Enforcement, Authorization Testing & Evidence Vault"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.12"
+authors = [
+    {name = "BoundaryX Contributors"}
+]
+keywords = ["security", "pentesting", "bug-bounty", "recon", "scope-guard", "authorization"]
+
+dependencies = [
+    "pydantic>=2.7.0,<3.0",
+    "pydantic-settings>=2.3.0,<3.0",
+    "httpx>=0.27.0,<1.0",
+    "pyyaml>=6.0.1",
+    "cryptography>=43.0,<47.0",
+    "google-genai>=2.0.0",
+    "idna>=3.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.5.0",
+    "pyinstaller>=6.8",
+]
+
+[project.scripts]
+boundaryx-engine = "boundaryx.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["boundaryx*"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"

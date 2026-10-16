@@ -1,0 +1,108 @@
+schema_version: 1
+policy:
+  install_mode: user_confirmed_only
+  automatic_downloads: false
+  require_scope_guard: true
+  active_scans_default_enabled: false
+  use_shell: false
+  verify_release_metadata_when_available: true
+  store_raw_output_max_bytes: 10485760
+  default_job_timeout_seconds: 900
+  default_max_concurrency: 3
+  default_requests_per_second: 2
+  notes: >-
+    Values are conservative starting defaults, not guarantees of safe load for every target.
+    The application must let the user set lower limits and enforce program policy.
+
+tools:
+  - id: subfinder
+    title: Subfinder
+    class: passive_recon
+    default_enabled: false
+    required: false
+    executable: subfinder
+    official_homepage: https://github.com/projectdiscovery/subfinder
+    docs_url: https://docs.projectdiscovery.io/
+    capability: passive_subdomain_discovery
+    network_activity: provider_dependent_passive
+    output_formats: [jsonl]
+    install_action: open_official_docs
+
+  - id: dnsx
+    title: dnsx
+    class: dns_recon
+    default_enabled: false
+    required: false
+    executable: dnsx
+    official_homepage: https://github.com/projectdiscovery/dnsx
+    docs_url: https://docs.projectdiscovery.io/
+    capability: dns_resolution
+    network_activity: active_dns
+    output_formats: [jsonl]
+    install_action: open_official_docs
+
+  - id: httpx
+    title: httpx (ProjectDiscovery)
+    class: web_probe
+    default_enabled: false
+    required: false
+    executable: httpx
+    official_homepage: https://github.com/projectdiscovery/httpx
+    docs_url: https://docs.projectdiscovery.io/
+    capability: http_probe_metadata
+    network_activity: active_http
+    output_formats: [jsonl]
+    install_action: open_official_docs
+
+  - id: katana
+    title: Katana
+    class: crawler
+    default_enabled: false
+    required: false
+    executable: katana
+    official_homepage: https://github.com/projectdiscovery/katana
+    docs_url: https://docs.projectdiscovery.io/
+    capability: bounded_web_crawl
+    network_activity: active_http
+    output_formats: [jsonl]
+    install_action: open_official_docs
+
+  - id: nuclei
+    title: Nuclei
+    class: template_scanner
+    default_enabled: false
+    required: false
+    executable: nuclei
+    official_homepage: https://github.com/projectdiscovery/nuclei
+    docs_url: https://docs.projectdiscovery.io/
+    capability: selected_template_checks
+    network_activity: active_http
+    active_by_default: false
+    require_user_preview: true
+    require_scope_revalidation: true
+    require_rate_limit: true
+    never_run_all_templates_automatically: true
+    output_formats: [jsonl]
+    install_action: open_official_docs
+
+  - id: ffuf
+    title: ffuf
+    class: web_fuzzer
+    default_enabled: false
+    required: false
+    executable: ffuf
+    official_homepage: https://github.com/ffuf/ffuf
+    capability: bounded_path_or_parameter_fuzzing
+    network_activity: active_http
+    active_by_default: false
+    require_user_preview: true
+    require_scope_revalidation: true
+    require_rate_limit: true
+    require_wordlist_size_limit: true
+    output_formats: [json]
+    install_action: open_official_docs
+
+future_tools:
+  - id: nmap
+    status: not_implemented
+    note: Only add with explicit port/range allowlists, conservative rate limits and separate tests.

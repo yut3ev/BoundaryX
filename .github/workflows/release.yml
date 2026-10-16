@@ -1,132 +1,55 @@
-name: Release
+name: BoundaryX Release Pipeline
 
 on:
   push:
     tags:
-      - "v*.*.*"
-  workflow_dispatch:
-    inputs:
-      tag_name:
-        description: "Release tag name (e.g. v0.1.0)"
-        required: true
-        default: "v0.1.0"
+      - "v*"
 
 permissions:
   contents: write
 
 jobs:
-  build-windows:
-    name: Build Windows Release
-    runs-on: windows-latest
+  build-linux-release:
+    name: Build Linux x86_64 Packages
+    runs-on: ubuntu-22.04
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.12
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "pip"
-
-      - name: Install Build Dependencies
-        run: |
-          python -m pip install --upgrade pip setuptools wheel
-          pip install -e ".[dev]"
-
-      - name: Build Standalone Windows Executable
-        run: |
-          python scripts/build_windows.py
-
-      - name: Upload Windows Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-release
-          path: |
-            dist/*.zip
-            dist/*.sha256
-
-  build-linux:
-    name: Build Linux Release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python 3.12
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "pip"
-
-      - name: Install Linux Build Dependencies
+      - name: Install Tauri Linux System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            libgl1-mesa-glx \
-            libegl1 \
-            libxkbcommon-x11-0 \
-            libxcb-cursor0 \
-            libxcb-icccm4 \
-            libxcb-image0 \
-            libxcb-keysyms1 \
-            libxcb-randr0 \
-            libxcb-render-util0 \
-            libxcb-shape0 \
-            libxcb-xfixes0 \
-            libxcb-xinerama0
+          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libssl-dev libayatana-appindicator3-dev librsvg2-dev
 
-      - name: Install Python Package Dependencies
-        run: |
-          python -m pip install --upgrade pip setuptools wheel
-          pip install -e ".[dev]"
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
 
-      - name: Build Standalone Linux Binary
-        run: |
-          bash scripts/build_linux.sh
-
-      - name: Upload Linux Artifacts
-        uses: actions/upload-artifact@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          name: linux-release
-          path: |
-            dist/*.tar.gz
-            dist/*.sha256
+          node-version: "20"
 
-  publish:
-    name: Publish GitHub Release
-    needs: [build-windows, build-linux]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Download Windows Artifacts
-        uses: actions/download-artifact@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          name: windows-release
-          path: release-assets
+          python-version: "3.12"
 
-      - name: Download Linux Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: linux-release
-          path: release-assets
-
-      - name: Generate Checksums Manifest
+      - name: Install dependencies & Build
         run: |
-          cd release-assets
-          sha256sum *.* > SHA256SUMS.txt
-          cat SHA256SUMS.txt
+          cd apps/desktop
+          npm install
+          npm run build
 
-      - name: Create GitHub Release
+      - name: Generate Checksums & SBOM
+        run: |
+          python3 scripts/generate_sbom.py
+
+      - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name || inputs.tag_name }}
-          name: BoundaryX ${{ github.ref_name || inputs.tag_name }}
+          files: |
+            docs/SBOM.json
+            CHANGELOG.md
           draft: false
           prerelease: false
           generate_release_notes: true
-          files: |
-            release-assets/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

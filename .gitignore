@@ -1,75 +1,70 @@
-# BoundaryX — Byte-compiled / optimized / DLL files
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.json
+secrets.yaml
+secrets.txt
+!**/secrets.py
+
+# Python
+.venv/
 __pycache__/
 *.py[cod]
-*$py.class
-*.so
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Virtual environments
-.venv/
-venv/
-ENV/
-
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-
-# Testing
 .pytest_cache/
-htmlcov/
+.mypy_cache/
+.pyright/
+.ruff_cache/
 .coverage
-.coverage.*
-coverage.xml
-*.cover
+htmlcov/
+*.egg-info/
 
-# Build artifacts
-*.spec
-!packaging/*.spec
-*.exe
-*.msi
+# JS / frontend
+node_modules/
+dist/
+.vite/
 
-# OS files
-.DS_Store
-Thumbs.db
-desktop.ini
+# Rust / Tauri
+target/
+apps/desktop/src-tauri/target/
 
-# Project data (user-generated, never commit)
-*.db
+# App data, databases, evidence and logs
 *.sqlite
 *.sqlite3
-data/
-backups/
-exports/
-
-# Secrets (NEVER commit)
-*.key
-*.pem
-secrets.json
-.env
-
-# Logs
-logs/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.har
+*.pcap
+*.pcapng
 *.log
+logs/
+evidence/
+reports/private/
+workspace-data/
 
-# PyInstaller
-*.manifest
+# Tool binaries and outputs
+bin/
+tools/bin/
+*.AppImage
+*.deb
+*.rpm
+*.msi
+*.dmg
+*.tar.gz
+*.zip
+
+# IDE/OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Build and coverage outputs
+coverage/
+artifacts/
+release/
+*.spec

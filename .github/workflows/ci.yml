@@ -1,93 +1,69 @@
-name: CI
+name: BoundaryX Continuous Integration
 
 on:
   push:
-    branches: [main, master]
+    branches: [main]
   pull_request:
-    branches: [main, master]
-  workflow_dispatch:
+    branches: [main]
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+permissions:
+  contents: read
 
 jobs:
-  lint:
-    name: Lint & Code Style
+  engine-tests:
+    name: Python Engine Suite
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.12
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: "pip"
 
-      - name: Install Linting Tools
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install ruff
+          uv pip install -e "./engine[dev]"
 
-      - name: Run Ruff Lint Check
-        run: ruff check src scripts
+      - name: Run Ruff Linter
+        run: |
+          uv run ruff check engine/
 
-  test:
-    name: Test (${{ matrix.os }} - Python ${{ matrix.python-version }})
-    needs: lint
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-        python-version: ["3.12", "3.13"]
+      - name: Run Pytest Test Suite
+        run: |
+          uv run pytest engine/tests -v
 
+  frontend-check:
+    name: Desktop Frontend Build & Lint
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          python-version: ${{ matrix.python-version }}
-          cache: "pip"
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: apps/desktop/package.json
 
-      - name: Install Linux GUI Dependencies
-        if: runner.os == 'Linux'
+      - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            libgl1-mesa-glx \
-            libegl1 \
-            libxkbcommon-x11-0 \
-            libxcb-cursor0 \
-            libxcb-icccm4 \
-            libxcb-image0 \
-            libxcb-keysyms1 \
-            libxcb-randr0 \
-            libxcb-render-util0 \
-            libxcb-shape0 \
-            libxcb-xfixes0 \
-            libxcb-xinerama0 \
-            xvfb
+          cd apps/desktop
+          npm ci || npm install
 
-      - name: Install Dependencies
+      - name: TypeScript Typecheck
         run: |
-          python -m pip install --upgrade pip setuptools wheel
-          pip install -e ".[dev]"
+          cd apps/desktop
+          npx tsc --noEmit
 
-      - name: Verify CLI and Demo Seeder
+      - name: Production Build Check
         run: |
-          python -m boundaryx.app --version
-          python scripts/seed_demo_data.py --db ci_test.db --clean
-
-      - name: Run Pytest Suite (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          pytest -v --tb=short
-
-      - name: Run Pytest Suite (Linux with Xvfb)
-        if: runner.os == 'Linux'
-        run: |
-          xvfb-run -a pytest -v --tb=short
+          cd apps/desktop
+          npm run build

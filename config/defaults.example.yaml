@@ -1,0 +1,42 @@
+app:
+  locale: en
+  theme: dark
+  telemetry: false
+  auto_resume_active_jobs: false
+
+storage:
+  database_name: boundaryx.sqlite3
+  backup_before_migration: true
+  log_rotation_mb: 10
+  log_retained_files: 5
+  evidence_max_item_mb: 10
+  import_max_file_mb: 25
+  max_http_body_preview_mb: 2
+
+scope:
+  default_policy: deny_unmatched
+  exclusions_override_inclusions: true
+  recheck_before_each_request: true
+  recheck_each_redirect: true
+  block_redirect_outside_scope: true
+
+jobs:
+  default_timeout_seconds: 900
+  default_max_concurrency: 3
+  default_requests_per_second: 2
+  max_retries: 2
+  active_scans_default_enabled: false
+
+ai:
+  enabled: false
+  provider: gemini
+  model: gemini-3.8-flash
+  require_preview_and_consent: true
+  redact_before_send: true
+  send_entire_database: false
+  max_context_chars: 50000
+  timeout_seconds: 60
+  max_retries: 2
+  allow_network_or_shell_tools: false
+
+# Example only. Real API key is stored outside this file via OS secret storage.

@@ -1,0 +1,44 @@
+name: Bug report
+description: Report a reproducible issue in BoundaryX
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Safety and privacy
+      options:
+        - label: I removed API keys, credentials, private target details and sensitive evidence.
+          required: true
+  - type: input
+    id: version
+    attributes:
+      label: BoundaryX version / commit
+      placeholder: v0.1.0 or commit SHA
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: OS / distribution / architecture
+      placeholder: Ubuntu 24.04 x86_64
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Use a local lab or synthetic fixture, not a third-party target.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and redacted logs
+    validations:
+      required: true
