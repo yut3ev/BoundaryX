@@ -19,7 +19,7 @@ jobs:
       - name: Install Tauri Linux System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev build-essential curl wget file libssl-dev libayatana-appindicator3-dev librsvg2-dev
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev build-essential curl wget file libssl-dev libayatana-appindicator3-dev librsvg2-dev pkg-config squashfs-tools
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
@@ -51,6 +51,10 @@ jobs:
           chmod +x apps/desktop/src-tauri/binaries/boundaryx-engine-x86_64-unknown-linux-gnu
           apps/desktop/src-tauri/binaries/boundaryx-engine-x86_64-unknown-linux-gnu --ping
 
+      - name: Run Desktop IPC & Sidecar Integration Test
+        run: |
+          cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml -- --nocapture
+
       - name: Install Desktop Frontend & Build Assets
         run: |
           cd apps/desktop
@@ -65,25 +69,61 @@ jobs:
       - name: Collect Release Artifacts, SBOM & Checksums
         run: |
           mkdir -p release-artifacts
-          python scripts/generate_sbom.py
-          cp docs/SBOM.json release-artifacts/
-          
-          # Copy bundled packages
-          if compgen -G "apps/desktop/src-tauri/target/release/bundle/deb/*.deb" > /dev/null; then
-            cp apps/desktop/src-tauri/target/release/bundle/deb/*.deb release-artifacts/
-          fi
-          if compgen -G "apps/desktop/src-tauri/target/release/bundle/appimage/*.AppImage" > /dev/null; then
-            cp apps/desktop/src-tauri/target/release/bundle/appimage/*.AppImage release-artifacts/
+
+          BUNDLE_ROOT="apps/desktop/src-tauri/target/release/bundle"
+
+          # Verify and copy .deb packages (fail if missing or empty)
+          DEB_FOUND=0
+          for deb in "$BUNDLE_ROOT"/deb/*.deb; do
+            if [ -s "$deb" ]; then
+              cp "$deb" release-artifacts/
+              DEB_FOUND=1
+            fi
+          done
+          if [ "$DEB_FOUND" -ne 1 ]; then
+            echo "[-] FATAL: Required .deb package was not generated or is empty in $BUNDLE_ROOT/deb!" >&2
+            exit 1
           fi
 
-          # Compute SHA-256 for all artifacts
+          # Verify and copy .AppImage packages (fail if missing or empty)
+          APPIMAGE_FOUND=0
+          for app in "$BUNDLE_ROOT"/appimage/*.AppImage; do
+            if [ -s "$app" ]; then
+              cp "$app" release-artifacts/
+              APPIMAGE_FOUND=1
+            fi
+          done
+          if [ "$APPIMAGE_FOUND" -ne 1 ]; then
+            echo "[-] FATAL: Required .AppImage package was not generated or is empty in $BUNDLE_ROOT/appimage!" >&2
+            exit 1
+          fi
+
+          # Generate dynamic SBOM covering lockfiles
+          python scripts/generate_sbom.py --output release-artifacts/SBOM.json
+          if [ ! -s "release-artifacts/SBOM.json" ]; then
+            echo "[-] FATAL: SBOM.json is missing or 0 bytes!" >&2
+            exit 1
+          fi
+
+          # Compute SHA-256 for all release artifacts
           cd release-artifacts
           sha256sum * > SHA256SUMS.txt
-          echo "Release artifacts and hashes:"
-          cat SHA256SUMS.txt
+          cd ..
+
+          # Run deep integrity audit on all release artifacts
+          python scripts/generate_sbom.py --verify-artifacts release-artifacts
+
+          echo "=========================================="
+          echo "Verified Release Artifacts:"
+          ls -la release-artifacts
+          echo "------------------------------------------"
+          cat release-artifacts/SHA256SUMS.txt
+          echo "=========================================="
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: |
             release-artifacts/*

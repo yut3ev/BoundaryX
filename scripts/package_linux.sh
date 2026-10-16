@@ -46,21 +46,46 @@ npx @tauri-apps/cli build --bundles deb,appimage
 echo "[6/6] Collecting release artifacts, SBOM, and SHA-256 checksums..."
 BUNDLE_ROOT="$ROOT_DIR/apps/desktop/src-tauri/target/release/bundle"
 
-# Copy deb and AppImage packages to dist-release
-if [ -d "$BUNDLE_ROOT/deb" ]; then
-    cp "$BUNDLE_ROOT"/deb/*.deb "$DIST_DIR/" 2>/dev/null || true
-fi
-if [ -d "$BUNDLE_ROOT/appimage" ]; then
-    cp "$BUNDLE_ROOT"/appimage/*.AppImage "$DIST_DIR/" 2>/dev/null || true
+# Verify and copy .deb packages
+DEB_FOUND=0
+for deb in "$BUNDLE_ROOT"/deb/*.deb; do
+    if [ -s "$deb" ]; then
+        cp "$deb" "$DIST_DIR/"
+        DEB_FOUND=1
+    fi
+done
+if [ "$DEB_FOUND" -ne 1 ]; then
+    echo "[-] FATAL: No valid non-empty .deb package was produced in $BUNDLE_ROOT/deb!" >&2
+    exit 1
 fi
 
-# Generate SBOM
+# Verify and copy .AppImage packages
+APPIMAGE_FOUND=0
+for app in "$BUNDLE_ROOT"/appimage/*.AppImage; do
+    if [ -s "$app" ]; then
+        cp "$app" "$DIST_DIR/"
+        APPIMAGE_FOUND=1
+    fi
+done
+if [ "$APPIMAGE_FOUND" -ne 1 ]; then
+    echo "[-] FATAL: No valid non-empty .AppImage package was produced in $BUNDLE_ROOT/appimage!" >&2
+    exit 1
+fi
+
+# Generate dynamic SBOM
 python3 "$ROOT_DIR/scripts/generate_sbom.py"
+if [ ! -s "$ROOT_DIR/docs/SBOM.json" ]; then
+    echo "[-] FATAL: SBOM generation failed or output file is empty!" >&2
+    exit 1
+fi
 cp "$ROOT_DIR/docs/SBOM.json" "$DIST_DIR/"
 
 # Compute SHA-256 checksums
 cd "$DIST_DIR"
 sha256sum * > SHA256SUMS.txt
+
+# Run integrity verification across all artifacts
+python3 "$ROOT_DIR/scripts/generate_sbom.py" --verify-artifacts "$DIST_DIR"
 
 echo "========================================================"
 echo " Build & Packaging Successful!"
@@ -68,3 +93,4 @@ echo " Release Artifacts in $DIST_DIR:"
 echo "--------------------------------------------------------"
 cat SHA256SUMS.txt
 echo "========================================================"
+
